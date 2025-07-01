@@ -9,10 +9,10 @@ class TicTacToe:
     Please note that the starting value must be X 
     """
     def __init__(self, size: int):
-        self.board: List[List[int]] = [[[0]*size]*size]
+        self.board: List[List[int]] = [[0 for _ in range(size)] for _ in range(size)]
         self.size: int = size
         #I'm creating the round variable to easily tell who's turn it is
-        self.round: int = 0 
+        self.round: int = 0
 
     def check_win(self) -> Optional[int]:
         """
@@ -123,9 +123,41 @@ class TicTacToe:
         """
         self.round = value
 
-    def play(self, row: int, column: int) -> None:
+    def play(self, row: int, column: int) -> int:
         """
         Plays the next move assuming the first person to play chose X
 
         @params
+            row: int - index of the row 
+            column: int - index of the column
+        @returns
+            value: int - 1 if successfully played
+                       - 0 if unsuccessful 
         """
+        if self.board[row][column] != 0: return 0
+
+        value: int = (self.round + 1)%2
+        value = value if value == 1 else -1
+        return 1
+
+    def __str__(self) -> str:
+        output: str = ""
+        for index, row in enumerate(self.board):
+            for num, column in enumerate(row):
+                if column == 0:
+                    output += " "
+                elif column == 1:
+                    output += "X"
+                else:
+                    output += "O"
+                
+                if num != self.size - 1:
+                    output += "|"
+                else:
+                    output += "\n"
+            
+            if index != self.size - 1:
+                output += "_"*(2*self.size - 2)
+                output += "\n"
+
+        return output
