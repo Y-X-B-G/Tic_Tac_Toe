@@ -184,4 +184,6 @@ class TicTacToe:
             if index != self.size - 1:
                 output += "_"*(2*self.size-1)
                 output += "\n"
+
+        output += f"Turn: {self.round}"
         return output
