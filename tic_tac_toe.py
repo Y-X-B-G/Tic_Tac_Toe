@@ -1,4 +1,5 @@
-from typing import Optional, List
+from typing import Optional, List, Self
+import copy
 
 class TicTacToe:
     """Tic-Tac-Toe class this class holds a game board of size nxn
@@ -141,6 +142,28 @@ class TicTacToe:
         self.board[row][column] = value
         self.round += 1
         return 1
+    
+    def next_states(self) -> List[Self]:
+        """
+        This generates an array that contains all possible future states 1 move into the future
+
+        @params
+            None:
+        @returns
+            If the current state is a winning state or a tie state return an empty list
+            else return a list of future states
+
+        """
+        next_moves: List[Self] = []
+        if self.check_win() is None:
+            for row_index, row in enumerate(self.board):
+                for col_index, column in enumerate(row):
+                    if column == 0:
+                        new_board: Self = copy.deepcopy(self)
+                        new_board.play(row_index, col_index)
+                        next_moves.append(new_board)
+
+        return next_moves
 
     def __str__(self) -> str:
         output: str = ""
@@ -162,46 +185,3 @@ class TicTacToe:
                 output += "_"*(2*self.size-1)
                 output += "\n"
         return output
-
-"""
-def main():
-    board: TicTacToe = TicTacToe(4)
-
-    board.set_board(0,0,1)
-    board.set_board(0,1,1)
-    board.set_board(0,2,1)
-    
-    board.set_board(0,0,1)
-    board.set_board(1,0,1)
-    board.set_board(2,0,1)
-
-    board.set_board(0,0,1)
-    board.set_board(1,1,1)
-    board.set_board(2,2,1)    
-
-    board.set_board(2,0,1)
-    board.set_board(1,1,1)
-    board.set_board(0,2,1)
-
-    board.set_board(0,0,1)
-    board.set_board(0,1,1)
-    board.set_board(0,2,-1)
-    board.set_board(1,0,-1)
-    board.set_board(1,1,1)
-    board.set_board(1,2,1)
-    board.set_board(2,0,1)
-    board.set_board(2,1,-1)
-    board.set_board(2,2,-1)
-    board.set_round(9)
-
-    board.set_board(0,0,1)
-    board.set_board(0,1,1)
-    board.set_board(0,2,1)
-    board.set_board(0,3,1)
-
-    print(board.check_win())
-    print(board)
-
-main()
-
-"""
