@@ -23,7 +23,7 @@ class TicTacToe:
             int: 1 if X is the winner
                  -1 if O is the winner
                  0 if tie
-                 2 if the winner is undecided
+                 None if the winner is undecided
         """
         dim: int = self.size
         last: int  = dim - 1
@@ -44,7 +44,7 @@ class TicTacToe:
             while next_value < dim and rows[next_value] == winner: next_value += 1
 
             if next_value == dim:
-                print(f"Winner in row ${index}")
+                print(f"Winner in row {index}")
                 return winner
 
         #Checks columns for winners
@@ -57,7 +57,7 @@ class TicTacToe:
             while successor < dim and self.board[successor][columns] == victor: successor += 1
 
             if successor == dim:
-                print(f"Winner in column ${columns}")
+                print(f"Winner in column {columns}")
                 return victor
 
         #Checks diagonals for winners
@@ -71,7 +71,7 @@ class TicTacToe:
 
         if upward != 0:
             index = 1
-            while index < dim and downward == self.board[last-index][index]: index += 1
+            while index < dim and upward == self.board[last-index][index]: index += 1
 
             if index == dim:
                 print("Winner upper right diagonal")
@@ -80,7 +80,7 @@ class TicTacToe:
         if self.round == dim**2:
             return 0
 
-        return 2
+        return None
 
     def get_board(self) -> List[List[int]]:
         """
@@ -138,6 +138,8 @@ class TicTacToe:
 
         value: int = (self.round + 1)%2
         value = value if value == 1 else -1
+        self.board[row][column] = value
+        self.round += 1
         return 1
 
     def __str__(self) -> str:
@@ -150,14 +152,56 @@ class TicTacToe:
                     output += "X"
                 else:
                     output += "O"
-                
+
                 if num != self.size - 1:
                     output += "|"
                 else:
                     output += "\n"
-            
-            if index != self.size - 1:
-                output += "_"*(2*self.size - 2)
-                output += "\n"
 
+            if index != self.size - 1:
+                output += "_"*(2*self.size-1)
+                output += "\n"
         return output
+
+"""
+def main():
+    board: TicTacToe = TicTacToe(4)
+
+    board.set_board(0,0,1)
+    board.set_board(0,1,1)
+    board.set_board(0,2,1)
+    
+    board.set_board(0,0,1)
+    board.set_board(1,0,1)
+    board.set_board(2,0,1)
+
+    board.set_board(0,0,1)
+    board.set_board(1,1,1)
+    board.set_board(2,2,1)    
+
+    board.set_board(2,0,1)
+    board.set_board(1,1,1)
+    board.set_board(0,2,1)
+
+    board.set_board(0,0,1)
+    board.set_board(0,1,1)
+    board.set_board(0,2,-1)
+    board.set_board(1,0,-1)
+    board.set_board(1,1,1)
+    board.set_board(1,2,1)
+    board.set_board(2,0,1)
+    board.set_board(2,1,-1)
+    board.set_board(2,2,-1)
+    board.set_round(9)
+
+    board.set_board(0,0,1)
+    board.set_board(0,1,1)
+    board.set_board(0,2,1)
+    board.set_board(0,3,1)
+
+    print(board.check_win())
+    print(board)
+
+main()
+
+"""
