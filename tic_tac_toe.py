@@ -32,11 +32,11 @@ class TicTacToe:
         #variables for checking the dagonals
         downward: int = self.board[0][0]
         upward: int = self.board[last][0]
-        index: int = 1
+        index_diag: int = 1
 
         #Check's the rows for winners
         for index, rows in enumerate(self.board):
-            #If the first value isn't initialized we just skip the row    
+            #If the first value isn't initialized we just skip the row
             if rows[0] == 0: continue
 
             winner: int = rows[0]
@@ -64,17 +64,17 @@ class TicTacToe:
         #Checks diagonals for winners
 
         if downward != 0:
-            while index < dim and downward == self.board[index][index]: index += 1
+            while index_diag < dim and downward == self.board[index_diag][index_diag]: index_diag += 1
 
-            if index == dim:
+            if index_diag == dim:
                 print("Winner upper left diagonal")
                 return downward
 
         if upward != 0:
-            index = 1
-            while index < dim and upward == self.board[last-index][index]: index += 1
+            index_diag = 1
+            while index_diag < dim and upward == self.board[last-index_diag][index_diag]: index_diag += 1
 
-            if index == dim:
+            if index_diag == dim:
                 print("Winner upper right diagonal")
                 return upward
 
@@ -142,7 +142,7 @@ class TicTacToe:
         self.board[row][column] = value
         self.round += 1
         return 1
-    
+
     def next_states(self) -> List[Self]:
         """
         This generates an array that contains all possible future states 1 move into the future
@@ -187,3 +187,17 @@ class TicTacToe:
 
         output += f"Turn: {self.round}"
         return output
+
+
+def main():
+    board = TicTacToe(3)
+    board.play(0,0)
+    board.play(1,0)
+    board.play(2,0)
+    board.play(1,1)
+    board.play(2,2)
+    print(board)
+    print(board.check_win())
+
+
+main()
