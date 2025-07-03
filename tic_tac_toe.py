@@ -91,7 +91,7 @@ class TicTacToe:
         @returns
             self.board: List[List[int]] - The current board state
         """
-        return self.board
+        return copy.deepcopy(self.board)
 
     def set_board(self, row: int, column: int, value: int) -> None:
         """
