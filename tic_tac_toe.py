@@ -15,7 +15,15 @@ class TicTacToe:
         self.size: int = size
         #I'm creating the round variable to easily tell who's turn it is
         self.round: int = 0
-
+    def get_current_player(self) -> int:
+        """
+        Determines who's turn it is.
+        @params
+            None:
+        @returns
+            int: 1 for X, -1 for O
+        """
+        return 1 if (self.round + 1) % 2 == 1 else -1
     def check_win(self) -> Optional[int]:
         """
         Check the current board to see if its a winner
