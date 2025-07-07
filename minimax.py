@@ -1,6 +1,6 @@
 from tic_tac_toe import TicTacToe
 from typing import Optional, List, Self
-
+import copy
 
 class MinimaxAI:#assuming 1 is AI and -1 is Playuer
     def __init__(self, maximizing_player: int):
