@@ -1,5 +1,6 @@
 from typing import Optional, List, Self
 import copy
+import random
 
 class TicTacToe:
     """Tic-Tac-Toe class this class holds a game board of size nxn
@@ -96,8 +97,6 @@ class TicTacToe:
     def set_board(self, row: int, column: int, value: int) -> None:
         """
         Sets the value of a space on the board without checking if the move is valid
-     
-        ***FOR TESTING ONLY***
 
         @params
             row: int - row index
@@ -164,6 +163,23 @@ class TicTacToe:
                         next_moves.append(new_board)
 
         return next_moves
+
+    def stochastic_delete(self) -> None:
+        """
+        This is the stochastic step of the tic tac toe board.
+        We generate a value between 0 and self.size**2 -1 
+        which corresponds the position on the board if it was linear
+        We then delete that position. This should be done after both playered ended their turn
+
+        @params
+            None
+        @returns
+            None
+        """
+        position: int = random.randint(0,self.size**2-1)
+        row: int = position//self.size
+        column: int = position - self.size*row 
+        self.set_board(row, column, 0)
 
     def __str__(self) -> str:
         output: str = ""
