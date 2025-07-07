@@ -203,17 +203,4 @@ class TicTacToe:
 
         output += f"Turn: {self.round}"
         return output
-
-
-def main():
-    board = TicTacToe(3)
-    board.play(0,0)
-    board.play(1,0)
-    board.play(2,0)
-    board.play(1,1)
-    board.play(2,2)
-    print(board)
-    print(board.check_win())
-
-
-main()
+        
