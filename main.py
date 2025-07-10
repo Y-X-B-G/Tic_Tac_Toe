@@ -97,4 +97,7 @@ def Player_vs_Minimax():
                 print("AI has no valid moves left. This shouldn't happen before a tie/win.")
                 break # Should be caught by check_win earlier
 
+def Minimax_vs_Minimax():
+    board_size = 3                
+
 Gemini_vs_Minimax()
