@@ -2,7 +2,7 @@ from tic_tac_toe import TicTacToe
 from typing import Optional, List, Self
 import copy
 
-class Minimax_AB:#assuming 1 is AI and -1 is Playuer
+class AlphaBetaAI:#assuming 1 is AI and -1 is Playuer
     def __init__(self, maximizing_player: int):
         """
       
@@ -12,7 +12,7 @@ class Minimax_AB:#assuming 1 is AI and -1 is Playuer
         """
         self.maximizing_player = maximizing_player
 
-    def minimax(self, game_state: TicTacToe, alpha: float, beta: float) -> int:
+    def minimax(self, game_state: TicTacToe, alpha: float, beta: float) -> float:
         #When calling, start with self.minimax(game_state, -float('inf'), float('inf'))
         """
         Implements the Minimax algorithm to find the optimal score for the current state.
@@ -36,11 +36,11 @@ class Minimax_AB:#assuming 1 is AI and -1 is Playuer
         if game_state.get_current_player() == self.maximizing_player:#if the player that were maximizing's turn
             max_eval = -float('inf')# set the max (alpha) to -inf
             for next_state in game_state.next_states():#go through all the next possible game states
-                eval = self.minimax(next_state)#keep going until all base case is found (by base case win loss or tie)
+                eval = self.minimax(next_state,alpha,beta)#keep going until all base case is found (by base case win loss or tie)
                 max_eval = max(max_eval, eval)#find the max that leads to the highest scores
                 alpha = max(alpha, eval)  # Update alpha for pruning
-            if beta <= alpha:  
-                return max_eval  # Beta cut-off
+                if beta <= alpha:  
+                    break  # Beta cut-off
             
             #If reached, no cut-off, return the max evaluation found
             return max_eval
@@ -48,11 +48,11 @@ class Minimax_AB:#assuming 1 is AI and -1 is Playuer
         else:
             min_eval = float('inf')#same thing as max but if were minimizing but for the ai
             for next_state in game_state.next_states():
-                eval = self.minimax(next_state)
+                eval = self.minimax(next_state, alpha, beta)
                 min_eval = min(min_eval, eval)
                 beta = min(beta, eval)  # Update beta for pruning
-            if beta <= alpha:
-                return min_eval  # Alpha cut-off
+                if beta <= alpha:
+                    break  # Alpha cut-off
 
             return min_eval
 
@@ -74,7 +74,7 @@ class Minimax_AB:#assuming 1 is AI and -1 is Playuer
                     temp_game = copy.deepcopy(game_state)#create a temporary game so we can try and see the best score we can get
                     temp_game.play(r, c)
                     
-                    score = self.minimax(temp_game)#get the score of the game if we were to play the chosen spot
+                    score = self.minimax(temp_game,-float('inf'),float('inf'))#get the score of the game if we were to play the chosen spot
 
                     if game_state.get_current_player() == self.maximizing_player:#if were going for highest score 
                         if score > best_score:

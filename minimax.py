@@ -12,7 +12,7 @@ class MinimaxAI:#assuming 1 is AI and -1 is Playuer
         """
         self.maximizing_player = maximizing_player
 
-    def minimax(self, game_state: TicTacToe) -> int:
+    def minimax(self, game_state: TicTacToe) -> float:
         """
         Implements the Minimax algorithm to find the optimal score for the current state.
         
