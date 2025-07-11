@@ -1,100 +1,351 @@
 import time
-import os
-from tic_tac_toe import TicTacToe 
+from tic_tac_toe import TicTacToe
 from minimax import MinimaxAI
+from expectiminimax import ExpectiminimaxAI
+from alphabeta import AlphaBetaAI
 from Gemini import GeminiAI
 
-def Gemini_vs_Minimax():
+#——— Human vs AI ———————————————————————————————————————
+def Human_vs_Minimax():
+    """Human (X) goes first vs Minimax AI (O)"""
+    board_size = 3
+    game = TicTacToe(board_size)
+    print("Human (X) vs Minimax AI (O)")
+    print("Enter your moves as 'row,column' (0-2,0-2)")
+
+    while True:
+        print(game)
+        r, c = map(int, input("Your move: ").split(","))
+        if not game.play(r, c):
+            print("Invalid move. Try again.")
+            continue
+        if (winner := game.check_win()) is not None:
+            print(game)
+            print("🔵 Human (X) wins!" if winner == 1 else "🟠 Minimax AI (O) wins!" if winner == -1 else "🤝 It's a draw!")
+            break
+        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"AI (O) played at {r},{c}")
+        else:
+            print("No valid moves left for AI (O).")
+        time.sleep(0.2)
+
+#——— AI vs AI —————————————————————————————————————————
+def Minimax_vs_Gemini():
+    """Minimax AI (X) goes first vs Gemini AI (O)"""
+    board_size = 3
+    game = TicTacToe(board_size)
+    print("Minimax AI (X) vs Gemini AI (O)")
     was_wrong = [-1,-1,-1]
+    while True:
+        print(game)
+        move = MinimaxAI(maximizing_player=1).find_best_move(game)
+        if move is None:
+            print("No valid moves left for X (Minimax).")
+            break
+        r, c = move
+        game.play(r, c)
+        print(f"X (Minimax) played at {r},{c}")
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+        print(game)
+        response = GeminiAI(game.board, was_wrong)
+        r, c = map(int, response.split(","))
+        game.play(r, c)
+        print(f"O (Gemini) played at {r},{c}")
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+    print(game)
+    winner = game.check_win()
+    print("🔵 Minimax (X) wins!" if winner == 1 else "🟠 Gemini (O) wins!" if winner == -1 else "🤝 It's a draw!")
+
+#——— AI vs AI —————————————————————————————————————————
+def Gemini_vs_Minimax():
+    """Gemini AI (X) goes first vs Minimax AI (O)"""
     board_size = 3
     game = TicTacToe(board_size)
-
-    ai = MinimaxAI(maximizing_player=-1) # AI plays as O. Since O is -1, we are truomg tp maximizE
-
-    print("You are X. The AI is O.")
-    print("Enter your moves as 'row,column' (0-2, 0-2)")
-
+    print("Gemini AI (X) vs Minimax AI (O)")
+    was_wrong = [-1,-1,-1]
     while True:
-        print("\n" + "="*20)
         print(game)
+        response = GeminiAI(game.board, was_wrong)
+        r, c = map(int, response.split(","))
+        game.play(r, c)
+        print(f"X (Gemini) played at {r},{c}")
+        if game.check_win() is not None: break
+        
+        print(game)
+        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Minimax) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Minimax).")
+            break
+        if game.check_win() is not None: break
 
-        winner = game.check_win()
-        if winner is not None:
-            if winner == 1:
-                print("Game Over! GEMINI (X) win!")
-            elif winner == -1:
-                print("Game Over! MINIMAX_AI (O) wins!")
-            else:
-                print("Game Over! It's a Tie!")
-            break 
+    print(game)
+    winner = game.check_win()
+    print("🔵 Gemini (X) wins!" if winner == 1 else "🟠 Minimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
 
-        current_player = game.get_current_player()
-
-        if current_player == 1:#gemini
-            while True:
-                print(game.get_board())
-                move_input = GeminiAI(game.get_board(), was_wrong)
-                print(move_input)
-                r, c = map(int, move_input.split(','))
-                if game.play(r, c) == 1:    
-                    break #if valid. ,pve on
-                else:
-                    print("Invalid move. Cell occupied or out of bounds. Try again.")
-                    was_wrong[0] = 1
-                    was_wrong[1] = r
-                    was_wrong[2] = c
-
-        else: #AI turn
-            best_move = ai.find_best_move(game)
-            if best_move:
-                game.play(best_move[0], best_move[1])
-                print(f"AI (O) played at {best_move[0]},{best_move[1]}")
-            else:
-                print("AI has no valid moves left. This shouldn't happen before a tie/win.")
-                GeminiAI(game.get_board())
-                break
-
-def Player_vs_Minimax():
+#——— AI vs AI —————————————————————————————————————————
+def Minimax_vs_AlphaBeta():
+    """Minimax AI (X) goes first vs Alpha-Beta AI (O)"""
     board_size = 3
     game = TicTacToe(board_size)
-
-    ai = MinimaxAI(maximizing_player=-1) # AI plays as O. Since O is -1, we are truomg tp maximizE
-
-    print("You are X. The AI is O.")
-    print("Enter your moves as 'row,column' (0-2, 0-2)")
-
+    print("Minimax AI (X) vs Alpha-Beta AI (O)")
     while True:
-        print("\n" + "="*20)
         print(game)
+        move = MinimaxAI(maximizing_player=1).find_best_move(game)
+        if move is None:
+            print("No valid moves left for X (Minimax).")
+            break
+        r, c = move
+        game.play(r, c)
+        print(f"X (Minimax) played at {r},{c}")
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+        print(game)
+        move = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Alpha-Beta) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Alpha-Beta).")
+            break
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+    print(game)
+    winner = game.check_win()
+    print("🔵 Minimax (X) wins!" if winner == 1 else "🟠 Alpha-Beta (O) wins!" if winner == -1 else "🤝 It's a draw!")
 
-        winner = game.check_win()
-        if winner is not None:
-            if winner == 1:
-                print("Game Over! You (X) win!")
-            elif winner == -1:
-                print("Game Over! AI (O) wins!")
-            else:
-                print("Game Over! It's a Tie!")
-            break 
+#——— AI vs AI —————————————————————————————————————————
+def AlphaBeta_vs_Minimax():
+    """Alpha-Beta AI (X) goes first vs Minimax AI (O)"""
+    board_size = 3
+    game = TicTacToe(board_size)
+    print("Alpha-Beta AI (X) vs Minimax AI (O)")
+    while True:
+        print(game)
+        move = AlphaBetaAI(maximizing_player=1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"X (Alpha-Beta) played at {r},{c}")
+        else:
+            print("No valid moves left for X (Alpha-Beta).")
+            break
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+        print(game)
+        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Minimax) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Minimax).")
+            break
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+    print(game)
+    winner = game.check_win()
+    print("🔵 Alpha-Beta (X) wins!" if winner == 1 else "🟠 Minimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
 
-        current_player = game.get_current_player()
+#——— AI vs AI —————————————————————————————————————————
+def Minimax_vs_Expectiminimax():
+    """Minimax AI (X) goes first vs Expectiminimax AI (O)"""
+    board_size = 3
+    game = TicTacToe(board_size)
+    print("Minimax AI (X) vs Expectiminimax AI (O)")
+    while True:
+        print(game)
+        r, c = MinimaxAI(maximizing_player=1).find_best_move(game)
+        game.play(r, c)
+        print(f"X (Minimax) played at {r},{c}")
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+        print(game)
+        r, c = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
+        game.play(r, c)
+        print(f"O (Expectiminimax) played at {r},{c}")
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+    print(game)
+    winner = game.check_win()
+    print("🔵 Minimax (X) wins!" if winner == 1 else "🟠 Expectiminimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
 
-        if current_player == 1:#player turn 
-            while True:
-                move_input = input("Your turn (X). Enter row,column: ")
-                r, c = map(int, move_input.split(','))
-                if game.play(r, c) == 1:    
-                    break 
-                else:
-                    print("Invalid move. Cell occupied or out of bounds. Try again.")
+#——— AI vs AI —————————————————————————————————————————
+def Expectiminimax_vs_Minimax():
+    """Expectiminimax AI (X) goes first vs Minimax AI (O)"""
+    board_size = 3
+    game = TicTacToe(board_size)
+    print("Expectiminimax AI (X) vs Minimax AI (O)")
+    while True:
+        print(game)
+        move = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"X (Expectiminimax) played at {r},{c}")
+        else:
+            print("No valid moves left for X (Expectiminimax).")
+            break
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+        print(game)
+        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Minimax) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Minimax).")
+            break
+        if game.check_win() is not None: break
+    print(game)
+    winner = game.check_win()
+    print("🔵 Expectiminimax (X) wins!" if winner == 1 else "🟠 Minimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
 
-        else: #AI turn
-            best_move = ai.find_best_move(game)
-            if best_move:
-                game.play(best_move[0], best_move[1])
-                print(f"AI (O) played at {best_move[0]},{best_move[1]}")
-            else:
-                print("AI has no valid moves left. This shouldn't happen before a tie/win.")
-                break # Should be caught by check_win earlier
+#——— AI vs AI Self-Play ——————————————————————————————————
+def Minimax_self_play():
+    """Minimax AI (X) vs Minimax AI (O)"""
+    board_size = 3
+    game = TicTacToe(board_size)
+    print("Minimax AI (X) vs Minimax AI (O)")
+    while True:
+        print(game)
+        move = MinimaxAI(maximizing_player=1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"X (Minimax) played at {r},{c}")
+        else:
+            print("No valid moves left for X (Minimax).")
+            break
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+        print(game)
+        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Minimax) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Minimax).")
+            break
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+    print(game)
+    winner = game.check_win()
+    print("🔵 Minimax (X) wins!" if winner == 1 else "🟠 Minimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
 
-Gemini_vs_Minimax()
+def AlphaBeta_self_play():
+    """Alpha-Beta AI (X) vs Alpha-Beta AI (O)"""
+    board_size = 3
+    game = TicTacToe(board_size)
+    print("Alpha-Beta AI (X) vs Alpha-Beta AI (O)")
+    while True:
+        print(game)
+        move = AlphaBetaAI(maximizing_player=1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"X (Alpha-Beta) played at {r},{c}")
+        else:
+            print("No valid moves left for X (Alpha-Beta).")
+            break
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+        print(game)
+        move = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Alpha-Beta) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Alpha-Beta).")
+            break
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+    print(game)
+    winner = game.check_win()
+    print("🔵 Alpha-Beta (X) wins!" if winner == 1 else "🟠 Alpha-Beta (O) wins!" if winner == -1 else "🤝 It's a draw!")
+
+def Expectiminimax_self_play():
+    """Expectiminimax AI (X) vs Expectiminimax AI (O)"""
+    board_size = 3
+    game = TicTacToe(board_size)
+    print("Expectiminimax AI (X) vs Expectiminimax AI (O)")
+    while True:
+        print(game)
+        move = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"X (Expectiminimax) played at {r},{c}")
+        else:
+            print("No valid moves left for X (Expectiminimax).")
+            break
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+        print(game)
+        move = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Expectiminimax) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Expectiminimax).")
+            break
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+    print(game)
+    winner = game.check_win()
+    print("🔵 Expectiminimax (X) wins!" if winner == 1 else "🟠 Expectiminimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
+
+
+def Gemini_self_play():
+    """Gemini AI (X) vs Gemini AI (O)"""
+    board_size = 3
+    game = TicTacToe(board_size)
+    print("Gemini AI (X) vs Gemini AI (O)")
+    was_wrong_x = [-1, -1, -1]
+    was_wrong_o = [-1, -1, -1]
+    while True:
+        print(game)
+        response = GeminiAI(game.board, was_wrong_x)
+        r, c = map(int, response.split(","))
+        game.play(r, c)
+        print(f"X (Gemini) played at {r},{c}")
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+        print(game)
+        response = GeminiAI(game.board, was_wrong_o)
+        r, c = map(int, response.split(","))
+        game.play(r, c)
+        print(f"O (Gemini) played at {r},{c}")
+        if game.check_win() is not None: break
+        time.sleep(0.2)
+    print(game)
+    winner = game.check_win()
+    print("🔵 Gemini (X) wins!" if winner == 1 else "🟠 Gemini (O) wins!" if winner == -1 else "🤝 It's a draw!")
+
+if __name__ == "__main__":
+    # Uncomment one matchup to run:
+    # Human_vs_Minimax()
+    #Minimax_vs_Gemini()
+    # Gemini_vs_Minimax()
+    # Minimax_vs_AlphaBeta()
+    #AlphaBeta_vs_Minimax()
+    #Minimax_vs_Expectiminimax()
+    Expectiminimax_vs_Minimax()
+     #Minimax_self_play()
+    # AlphaBeta_self_play()
+    # Expectiminimax_self_play()
+    # Gemini_self_play()
+
