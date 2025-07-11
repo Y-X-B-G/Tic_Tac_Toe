@@ -12,7 +12,7 @@ class ExpectiminimaxAI:#assuming 1 is AI and -1 is Playuer
         """
         self.maximizing_player = maximizing_player
 
-    def expectiminimax(self, game_state: TicTacToe, depth: int = 0) -> float:
+    def expectiminimax(self, game_state: TicTacToe, depth: int = 0) -> int:
         """
         Implements the Expectiminimax algorithm
 
