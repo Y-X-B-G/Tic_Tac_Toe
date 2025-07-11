@@ -13,6 +13,7 @@ class TicTacToe:
     def __init__(self, size: int):
         self.board: List[List[int]] = [[0 for _ in range(size)] for _ in range(size)]
         self.size: int = size
+
         #I'm creating the round variable to easily tell who's turn it is
         self.round: int = 0
     def get_current_player(self) -> int:
@@ -54,7 +55,7 @@ class TicTacToe:
             while next_value < dim and rows[next_value] == winner: next_value += 1
 
             if next_value == dim:
-                print(f"Winner in row {index}")
+                #print(f"Winner in row {index}")
                 return winner
 
         #Checks columns for winners
@@ -67,7 +68,7 @@ class TicTacToe:
             while successor < dim and self.board[successor][columns] == victor: successor += 1
 
             if successor == dim:
-                print(f"Winner in column {columns}")
+                #print(f"Winner in column {columns}")
                 return victor
 
         #Checks diagonals for winners
@@ -76,7 +77,7 @@ class TicTacToe:
             while index_diag < dim and downward == self.board[index_diag][index_diag]: index_diag += 1
 
             if index_diag == dim:
-                print("Winner upper left diagonal")
+                #print("Winner upper left diagonal")
                 return downward
 
         if upward != 0:
@@ -84,7 +85,7 @@ class TicTacToe:
             while index_diag < dim and upward == self.board[last-index_diag][index_diag]: index_diag += 1
 
             if index_diag == dim:
-                print("Winner upper right diagonal")
+                #print("Winner upper right diagonal")
                 return upward
 
         if self.round == dim**2:

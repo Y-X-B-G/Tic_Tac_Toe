@@ -74,7 +74,7 @@ def Gemini_vs_Minimax():
         game.play(r, c)
         print(f"X (Gemini) played at {r},{c}")
         if game.check_win() is not None: break
-        time.sleep(0.2)
+        
         print(game)
         move = MinimaxAI(maximizing_player=-1).find_best_move(game)
         if move is not None:
@@ -85,7 +85,7 @@ def Gemini_vs_Minimax():
             print("No valid moves left for O (Minimax).")
             break
         if game.check_win() is not None: break
-        time.sleep(0.2)
+
     print(game)
     winner = game.check_win()
     print("🔵 Gemini (X) wins!" if winner == 1 else "🟠 Minimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
