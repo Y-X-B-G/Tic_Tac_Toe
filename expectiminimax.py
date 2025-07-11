@@ -12,7 +12,9 @@ class ExpectiminimaxAI:#assuming 1 is AI and -1 is Playuer
         """
         self.maximizing_player = maximizing_player
 
+        
     def expectiminimax(self, game_state: TicTacToe, depth: int = 0) -> float:
+
         """
         Implements the Expectiminimax algorithm
 
@@ -33,7 +35,9 @@ class ExpectiminimaxAI:#assuming 1 is AI and -1 is Playuer
         elif winner == 0:
             return 0  #Tie
 
-        #Chance node (after each round(every 2 plies), apply stochastic delete
+
+        #Chance node (after each round(every 2 plies), temporarily apply stochastic delete)
+
         if depth > 0 and depth % 2 == 0:
             total_utility = 0   #sum of utilities from all different deletions
             count = 0           #count of valid cells(filled) that can be deleted
@@ -47,6 +51,7 @@ class ExpectiminimaxAI:#assuming 1 is AI and -1 is Playuer
                         game_state.set_board(row, col, 0) # delete (set to 0) the cell temporarily to determine utility
 
                         # evaluate new state after deltion
+
                         utility = self.expectiminimax(game_state, depth + 1)
                         total_utility += utility   #sum utility values
                         count += 1                 #keep track of deletions
@@ -63,6 +68,7 @@ class ExpectiminimaxAI:#assuming 1 is AI and -1 is Playuer
             max_eval = -float('inf')# set the max (alpha) to -inf
             for next_state in game_state.next_states():#go through all the next possible game states
                 eval = self.expectiminimax(next_state, depth + 1)#keep going until all base case is found (by base case win loss or tie)
+
                 max_eval = max(max_eval, eval)#find the max that leads to the highest scores
             return max_eval
         #MIN node(opponent minimizing score)
@@ -70,6 +76,8 @@ class ExpectiminimaxAI:#assuming 1 is AI and -1 is Playuer
             min_eval = float('inf')#same thing as max but if were minimizing but for the ai
             for next_state in game_state.next_states():
                 eval = self.expectiminimax(next_state, depth + 1)
+
+
                 min_eval = min(min_eval, eval)
             return min_eval
 
@@ -102,3 +110,4 @@ class ExpectiminimaxAI:#assuming 1 is AI and -1 is Playuer
                             best_score = score
                             best_move = (r, c)
         return best_move#return the best mvoe
+
