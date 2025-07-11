@@ -37,6 +37,9 @@ def Gemini_vs_Minimax():
                 print(move_input)
                 r, c = map(int, move_input.split(','))
                 if game.play(r, c) == 1:    
+                    was_wrong = [-1,-1,-1]  # Reset was_wrong after a valid move
+                    print(f"GEMINI played at {r},{c}")
+                    time.sleep(1)
                     break #if valid. ,pve on
                 else:
                     print("Invalid move. Cell occupied or out of bounds. Try again.")
@@ -51,7 +54,7 @@ def Gemini_vs_Minimax():
                 print(f"AI (O) played at {best_move[0]},{best_move[1]}")
             else:
                 print("AI has no valid moves left. This shouldn't happen before a tie/win.")
-                GeminiAI(game.get_board())
+                GeminiAI(game.get_board(), was_wrong)
                 break
 
 def Player_vs_Minimax():
