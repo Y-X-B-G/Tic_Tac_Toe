@@ -343,9 +343,9 @@ if __name__ == "__main__":
     # Minimax_vs_AlphaBeta()
     #AlphaBeta_vs_Minimax()
     #Minimax_vs_Expectiminimax()
-    Expectiminimax_vs_Minimax()
+    #Expectiminimax_vs_Minimax()
      #Minimax_self_play()
     # AlphaBeta_self_play()
-    # Expectiminimax_self_play()
+    Expectiminimax_self_play()
     # Gemini_self_play()
 
