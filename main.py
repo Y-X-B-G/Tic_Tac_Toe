@@ -2,6 +2,7 @@ import time
 from tic_tac_toe import TicTacToe
 from minimax import MinimaxAI
 from expectiminimax import ExpectiminimaxAI
+from alphabeta import AlphaBetaAI
 from Gemini import GeminiAI
 
 #——— Human vs AI ———————————————————————————————————————
@@ -108,9 +109,14 @@ def Minimax_vs_AlphaBeta():
         if game.check_win() is not None: break
         time.sleep(0.2)
         print(game)
-        r, c = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
-        game.play(r, c)
-        print(f"O (Alpha-Beta) played at {r},{c}")
+        move = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Alpha-Beta) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Alpha-Beta).")
+            break
         if game.check_win() is not None: break
         time.sleep(0.2)
     print(game)
@@ -125,9 +131,14 @@ def AlphaBeta_vs_Minimax():
     print("Alpha-Beta AI (X) vs Minimax AI (O)")
     while True:
         print(game)
-        r, c = AlphaBetaAI(maximizing_player=1).find_best_move(game)
-        game.play(r, c)
-        print(f"X (Alpha-Beta) played at {r},{c}")
+        move = AlphaBetaAI(maximizing_player=1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"X (Alpha-Beta) played at {r},{c}")
+        else:
+            print("No valid moves left for X (Alpha-Beta).")
+            break
         if game.check_win() is not None: break
         time.sleep(0.2)
         print(game)
@@ -176,17 +187,26 @@ def Expectiminimax_vs_Minimax():
     print("Expectiminimax AI (X) vs Minimax AI (O)")
     while True:
         print(game)
-        r, c = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
-        game.play(r, c)
-        print(f"X (Expectiminimax) played at {r},{c}")
+        move = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"X (Expectiminimax) played at {r},{c}")
+        else:
+            print("No valid moves left for X (Expectiminimax).")
+            break
         if game.check_win() is not None: break
         time.sleep(0.2)
         print(game)
-        r, c = MinimaxAI(maximizing_player=-1).find_best_move(game)
-        game.play(r, c)
-        print(f"O (Minimax) played at {r},{c}")
+        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Minimax) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Minimax).")
+            break
         if game.check_win() is not None: break
-        time.sleep(0.2)
     print(game)
     winner = game.check_win()
     print("🔵 Expectiminimax (X) wins!" if winner == 1 else "🟠 Minimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
@@ -231,15 +251,25 @@ def AlphaBeta_self_play():
     print("Alpha-Beta AI (X) vs Alpha-Beta AI (O)")
     while True:
         print(game)
-        r, c = AlphaBetaAI(maximizing_player=1).find_best_move(game)
-        game.play(r, c)
-        print(f"X (Alpha-Beta) played at {r},{c}")
+        move = AlphaBetaAI(maximizing_player=1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"X (Alpha-Beta) played at {r},{c}")
+        else:
+            print("No valid moves left for X (Alpha-Beta).")
+            break
         if game.check_win() is not None: break
         time.sleep(0.2)
         print(game)
-        r, c = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
-        game.play(r, c)
-        print(f"O (Alpha-Beta) played at {r},{c}")
+        move = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Alpha-Beta) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Alpha-Beta).")
+            break
         if game.check_win() is not None: break
         time.sleep(0.2)
     print(game)
@@ -253,15 +283,25 @@ def Expectiminimax_self_play():
     print("Expectiminimax AI (X) vs Expectiminimax AI (O)")
     while True:
         print(game)
-        r, c = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
-        game.play(r, c)
-        print(f"X (Expectiminimax) played at {r},{c}")
+        move = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"X (Expectiminimax) played at {r},{c}")
+        else:
+            print("No valid moves left for X (Expectiminimax).")
+            break
         if game.check_win() is not None: break
         time.sleep(0.2)
         print(game)
-        r, c = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
-        game.play(r, c)
-        print(f"O (Expectiminimax) played at {r},{c}")
+        move = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Expectiminimax) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Expectiminimax).")
+            break
         if game.check_win() is not None: break
         time.sleep(0.2)
     print(game)
@@ -299,10 +339,10 @@ if __name__ == "__main__":
     # Uncomment one matchup to run:
     # Human_vs_Minimax()
     # Minimax_vs_Gemini()
-     Gemini_vs_Minimax()
-    # Minimax_vs_AlphaBeta()
-    # AlphaBeta_vs_Minimax()
-    # Minimax_vs_Expectiminimax()
+    # Gemini_vs_Minimax()
+    Minimax_vs_AlphaBeta()
+    #AlphaBeta_vs_Minimax()
+    #Minimax_vs_Expectiminimax()
     # Expectiminimax_vs_Minimax()
      #Minimax_self_play()
     # AlphaBeta_self_play()
