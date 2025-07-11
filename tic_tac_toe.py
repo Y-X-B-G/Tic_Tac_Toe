@@ -178,7 +178,7 @@ class TicTacToe:
         """
         position: int = random.randint(0,self.size**2-1)
         row: int = position//self.size
-        column: int = position - self.size*row 
+        column: int = position - self.size*row
         self.set_board(row, column, 0)
 
     def __str__(self) -> str:
