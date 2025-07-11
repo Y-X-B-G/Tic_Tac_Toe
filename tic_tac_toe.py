@@ -87,10 +87,12 @@ class TicTacToe:
                 print("Winner upper right diagonal")
                 return upward
 
-        if self.round == dim**2:
-            return 0
+        for i in range(dim):
+            for j in range(dim):
+                if (self.board[i][j] == 0):
+                    return None
 
-        return None
+        return 0
 
     def get_board(self) -> List[List[int]]:
         """
