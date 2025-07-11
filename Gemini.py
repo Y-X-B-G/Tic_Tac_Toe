@@ -23,7 +23,10 @@ def GeminiAI(current_board, wrong):
         The current board is:
         {game_string}
 
-        Your objective is to maximize your chances of winning. If your opponent can win on their next move, you must block them even if it means you won't win immediately.
+        Your objective is to maximize your chances of winning. If your opponent can win on their next move, you must block them even if it means you might not win.
+        Your goal is to win as quickly as possible. 
+        Check if you have a winning move this turn and play it. If not, block your opponent if they can win on their next move. 
+        Otherwise, pick the move that gives you the best chance to win in future turns.
         Choose a valid, unoccupied cell for your next move. Respond ONLY with a single line in this format:
         row,column
         For example: 1,1"""
@@ -34,6 +37,10 @@ def GeminiAI(current_board, wrong):
           Your objective is to maximize your chances of winning. If your opponent can win on their next move, you must block them even if it means you might not win. 
           Here is the current game board:
           {game_string}
+        Your objective is to maximize your chances of winning. If your opponent can win on their next move, you must block them even if it means you might not win.
+        Your goal is to win as quickly as possible. 
+        Check if you have a winning move this turn and play it. If not, block your opponent if they can win on their next move. 
+        Otherwise, pick the move that gives you the best chance to win in future turns.
 
         Respond only with the coordinates of your chosen move, in this format:
           row,column
