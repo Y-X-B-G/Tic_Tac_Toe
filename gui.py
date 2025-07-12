@@ -9,10 +9,13 @@ class TicTacToeGUI:
         self.master = master
         self.master.title("CP468 Tic Tac Toe")
         self.master.resizable(True, True)
-        
+
         self.mode = tk.StringVar(value="Player vs Minimax")
-        self.board_size = 3
+        self.size_var = tk.StringVar(value="3x3")
+        self.board_size = int(self.size_var.get().split("x")[0])  # 👈 FIX HERE
+
         self.buttons = []
+        self.board_frame = None
         self.game = None
         self.ai = MinimaxAI(maximizing_player=-1)
 
@@ -20,39 +23,55 @@ class TicTacToeGUI:
         self.create_board()
         self.reset_game()
 
+
     def create_menu(self):
         frame = tk.Frame(self.master)
         frame.pack(pady=10)
 
         tk.Label(frame, text="Game Mode:", font=("Courier", 12)).pack(side=tk.LEFT, padx=5)
-
         modes = ["Player vs Minimax", "Minimax vs Gemini"]
         self.mode_dropdown = tk.OptionMenu(frame, self.mode, *modes, command=lambda _: self.reset_game())
         self.mode_dropdown.config(width=18, font=("Courier", 12))
         self.mode_dropdown.pack(side=tk.LEFT)
 
+        tk.Label(frame, text="Board Size:", font=("Courier", 12)).pack(side=tk.LEFT, padx=5)
+        sizes = [f"{i}x{i}" for i in range(3, 7)]  # From 3x3 to 6x6
+        self.size_dropdown = tk.OptionMenu(frame, self.size_var, *sizes, command=lambda _: self.reset_game())
+        self.size_dropdown.config(width=6, font=("Courier", 12))
+        self.size_dropdown.pack(side=tk.LEFT)
+
         tk.Button(frame, text="Restart", command=self.reset_game, font=("Courier", 12)).pack(side=tk.LEFT, padx=10)
 
     def create_board(self):
-        board_frame = tk.Frame(self.master)
-        board_frame.pack()
+        if self.board_frame:
+            self.board_frame.destroy()
+
+        self.board_frame = tk.Frame(self.master)
+        self.board_frame.pack()
 
         self.buttons = []
         for r in range(self.board_size):
             row = []
             for c in range(self.board_size):
-                btn = tk.Button(board_frame, text="", font=("Courier", 36, "bold"), width=3, height=1,
-                command=lambda row=r, col=c: self.handle_click(row, col))
-                btn.grid(row=r, column=c)
+                btn = tk.Button(
+                    self.board_frame, 
+                    text="", 
+                    font=("Courier", 36, "bold"), 
+                    width=3, height=1,
+                    fg="black",
+                    command=lambda row=r, col=c: self.handle_click(row, col)
+                )
+                btn.grid(row=r, column=c, padx=5, pady=5)
                 row.append(btn)
             self.buttons.append(row)
 
     def reset_game(self):
+        size_str = self.size_var.get()
+        self.board_size = int(size_str.split("x")[0])
+
         self.game = TicTacToe(self.board_size)
-        for r in range(self.board_size):
-            for c in range(self.board_size):
-                self.buttons[r][c]["text"] = ""
-                self.buttons[r][c]["state"] = "normal"
+        self.create_board()
+
         if self.mode.get() == "Minimax vs Gemini":
             self.master.after(1000, self.run_ai_vs_ai)
 
@@ -109,11 +128,11 @@ class TicTacToeGUI:
         btn.config(
             text=symbol,
             state="disabled",
-            fg="white",                     
-            bg=color,                               
-            highlightbackground=color,      
+            fg="black",
+            bg=color,
+            highlightbackground=color,
             font=("Courier", 36, "bold")
-    )
+        )
 
     def check_game_over(self):
         winner = self.game.check_win()
