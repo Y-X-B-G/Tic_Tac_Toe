@@ -12,36 +12,38 @@ class ExpectiminimaxAI:#assuming 1 is AI and -1 is Playuer
         """
         self.maximizing_player = maximizing_player
     
-    def chance_node(self, game_state: TicTacToe) -> float:
+    def chance_node(self, game_state: TicTacToe, depth:int ) -> float:
         """
         Calculates the expected utility of a chance node in the Expectiminimax algorithm.
         Add rest of docstring later. 
         """
-                #Chance node (after each round(every 2 plies), apply stochastic delete
-        
-        total_utility = 0   #sum of utilities from all different deletions
-        count = 0           #count of valid cells(filled) that can be deleted
+        winner = game_state.check_win()
 
-        #go through each cell
-        for row in range(game_state.size):
-            for col in range(game_state.size):
-                #check if a cell can be deleted(either 1 or -1)
-                if game_state.board[row][col] != 0:
-                    original_val = game_state.board[row][col] #store the current value for retrieval
-                    game_state.set_board(row, col, 0) # delete (set to 0) the cell temporarily to determine utility
+        if winner == self.maximizing_player:
+            return float(1) #AI wins
+        elif winner == -self.maximizing_player:
+            return float(-1) #Opponent wins
+        elif winner == 0:
+            return (0) #Tie
+        else:
+            stochastic_result = game_state.stochastic_delete()
+            if stochastic_result is None:
+                winner = game_state.check_win()
+                if winner == self.maximizing_player:
+                    return float(1)
+                elif winner == -self.maximizing_player:
+                    return float(-1)
+                elif winner == 0:
+                    return float(0)
+                else:
+                    # No winner and nothing left to delete → tie
+                    return float(0)
+            else:
+                row, col, value = stochastic_result
+                utility = self.expectiminimax(game_state, depth+1)
+                game_state.set_board(row,col,value)
+                return utility
 
-                    # evaluate new state after deltion
-                    utility = self.expectiminimax(game_state, depth + 1)
-                    total_utility += utility   #sum utility values
-                    count += 1                 #keep track of deletions
-
-
-                    game_state.set_board(row, col, original_val) #restore original val to board
-  
-        if count > 0:
-            return total_utility / count
-        else: 
-            return 0
 
     def expectiminimax(self, game_state: TicTacToe, depth: int) -> float:
         """
@@ -56,30 +58,30 @@ class ExpectiminimaxAI:#assuming 1 is AI and -1 is Playuer
             Expected utility value of current game state
         """
         winner = game_state.check_win()
-
         if winner == self.maximizing_player:
-            return 1  #AI wins
+            return float(1)
         elif winner == -self.maximizing_player:
-            return -1 #Opponent wins
+            return float(-1)
         elif winner == 0:
-            return 0  #Tie
+            return float(0)
 
-
-        
-        #MAX node(Player maximizing score)
-        if game_state.get_current_player() == self.maximizing_player:#if the player that were maximizing's turn
-            max_eval = -float('inf')# set the max (alpha) to -inf
-            for next_state in game_state.next_states():#go through all the next possible game states
-                eval = self.expectiminimax(next_state, depth + 1)#keep going until all base case is found (by base case win loss or tie)
-                max_eval = max(max_eval, eval)#find the max that leads to the highest scores
-            return max_eval
-        #MIN node(opponent minimizing score)
+        if depth %2 ==0:
+            return self.chance_node(game_state,depth)
         else:
-            min_eval = float('inf')#same thing as max but if were minimizing but for the ai
-            for next_state in game_state.next_states():
-                eval = self.expectiminimax(next_state, depth + 1)
-                min_eval = min(min_eval, eval)
-            return min_eval
+        #MAX node(Player maximizing score)
+            if game_state.get_current_player() == self.maximizing_player:#if the player that were maximizing's turn
+                max_eval = -float('inf')# set the max (alpha) to -inf
+                for next_state in game_state.next_states():#go through all the next possible game states
+                    eval = self.expectiminimax(next_state, depth + 1)#keep going until all base case is found (by base case win loss or tie)
+                    max_eval = max(max_eval, eval)#find the max that leads to the highest scores
+                return max_eval
+            #MIN node(opponent minimizing score)
+            else:
+                min_eval = float('inf')#same thing as max but if were minimizing but for the ai
+                for next_state in game_state.next_states():
+                    eval = self.expectiminimax(next_state, depth + 1)
+                    min_eval = min(min_eval, eval)
+                return min_eval
 
     def find_best_move(self, game_state: TicTacToe) -> Optional[tuple[int, int]]:
         """
