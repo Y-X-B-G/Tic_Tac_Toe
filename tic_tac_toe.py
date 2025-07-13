@@ -175,7 +175,7 @@ class TicTacToe:
 
         return next_moves
 
-    def stochastic_delete(self) -> None:
+    def stochastic_delete(self) -> Optional[tuple[int, int, int]]:
         """
         This is the stochastic step of the tic tac toe board.
         We generate a value between 0 and self.size**2 -1 
@@ -187,10 +187,30 @@ class TicTacToe:
         @returns
             None
         """
+        #Buiding a list of all filled positions
+        filled_positions= []
+        for row in range(self.size):
+            for cols in range(self.size):
+                if self.board[row][cols] != 0:
+                    filled_positions.append([row,cols])
+        # if there is noting in the board, do nothing
+        if len( filled_positions) == 0:
+            return None
+        # If there is something, then randomly delete something, and return the row, column and original value
+        else:
+            position: List[int] = random.choice(filled_positions)
+            row: int = position[0]
+            column: int = position[1]
+            original_val = self.board[row][column]
+            self.board[row][column] = 0
+            return row, column, original_val
+        
+        #Don't need this anymore
+        """
         position: int = random.randint(0,self.size**2-1)
         row: int = position//self.size
         column: int = position - self.size*row
-        self.set_board(row, column, 0)
+      """
 
     def __str__(self) -> str:
         output: str = ""
@@ -213,5 +233,5 @@ class TicTacToe:
                 output += "\n"
 
         output += f"Turn: {self.round}"
-        return output
+        return output 
         

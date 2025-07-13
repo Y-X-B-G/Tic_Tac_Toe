@@ -339,13 +339,13 @@ if __name__ == "__main__":
     # Uncomment one matchup to run:
     # Human_vs_Minimax()
     #Minimax_vs_Gemini()
-    # Gemini_vs_Minimax()
+    #Gemini_vs_Minimax()
     # Minimax_vs_AlphaBeta()
     #AlphaBeta_vs_Minimax()
     #Minimax_vs_Expectiminimax()
     Expectiminimax_vs_Minimax()
      #Minimax_self_play()
     # AlphaBeta_self_play()
-    # Expectiminimax_self_play()
+    #Expectiminimax_self_play()
     # Gemini_self_play()
 
