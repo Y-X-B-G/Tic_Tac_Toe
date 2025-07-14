@@ -5,10 +5,8 @@ from expectiminimax import ExpectiminimaxAI
 from alphabeta import AlphaBetaAI
 from Gemini import GeminiAI
 
-#——— Human vs AI ———————————————————————————————————————
-def Human_vs_Minimax():
+def Human_vs_Minimax(board_size):
     """Human (X) goes first vs Minimax AI (O)"""
-    board_size = 3
     game = TicTacToe(board_size)
     print("Human (X) vs Minimax AI (O)")
     print("Enter your moves as 'row,column' (0-2,0-2)")
@@ -30,41 +28,14 @@ def Human_vs_Minimax():
             print(f"AI (O) played at {r},{c}")
         else:
             print("No valid moves left for AI (O).")
-        time.sleep(0.2)
-
-#——— AI vs AI —————————————————————————————————————————
-def Minimax_vs_Gemini():
-    """Minimax AI (X) goes first vs Gemini AI (O)"""
-    board_size = 3
-    game = TicTacToe(board_size)
-    print("Minimax AI (X) vs Gemini AI (O)")
-    was_wrong = [-1,-1,-1]
-    while True:
-        print(game)
-        move = MinimaxAI(maximizing_player=1).find_best_move(game)
-        if move is None:
-            print("No valid moves left for X (Minimax).")
+        if (winner := game.check_win()) is not None:
+            print(game)
+            print("Human (X) wins!" if winner == 1 else "Minimax AI (O) wins!" if winner == -1 else "It's a draw!")
             break
-        r, c = move
-        game.play(r, c)
-        print(f"X (Minimax) played at {r},{c}")
-        if game.check_win() is not None: break
         time.sleep(0.2)
-        print(game)
-        response = GeminiAI(game.board, was_wrong)
-        r, c = map(int, response.split(","))
-        game.play(r, c)
-        print(f"O (Gemini) played at {r},{c}")
-        if game.check_win() is not None: break
-        time.sleep(0.2)
-    print(game)
-    winner = game.check_win()
-    print("Minimax (X) wins!" if winner == 1 else "Gemini (O) wins!" if winner == -1 else "It's a draw!")
 
-#——— AI vs AI —————————————————————————————————————————
-def Gemini_vs_Minimax():
+def Gemini_vs_Minimax(board_size):
     """Gemini AI (X) goes first vs Minimax AI (O)"""
-    board_size = 3
     game = TicTacToe(board_size)
     print("Gemini AI (X) vs Minimax AI (O)")
     was_wrong = [-1,-1,-1]
@@ -91,10 +62,8 @@ def Gemini_vs_Minimax():
     winner = game.check_win()
     print("Gemini (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
-#——— AI vs AI —————————————————————————————————————————
-def Minimax_vs_AlphaBeta():
+def Minimax_vs_AlphaBeta(board_size):
     """Minimax AI (X) goes first vs Alpha-Beta AI (O)"""
-    board_size = 3
     game = TicTacToe(board_size)
     print("Minimax AI (X) vs Alpha-Beta AI (O)")
     while True:
@@ -123,10 +92,8 @@ def Minimax_vs_AlphaBeta():
     winner = game.check_win()
     print("Minimax (X) wins!" if winner == 1 else "Alpha-Beta (O) wins!" if winner == -1 else "It's a draw!")
 
-#——— AI vs AI —————————————————————————————————————————
-def AlphaBeta_vs_Minimax():
+def AlphaBeta_vs_Minimax(board_size):
     """Alpha-Beta AI (X) goes first vs Minimax AI (O)"""
-    board_size = 3
     game = TicTacToe(board_size)
     print("Alpha-Beta AI (X) vs Minimax AI (O)")
     while True:
@@ -156,10 +123,8 @@ def AlphaBeta_vs_Minimax():
     winner = game.check_win()
     print("Alpha-Beta (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
-#——— AI vs AI —————————————————————————————————————————
-def Minimax_vs_Expectiminimax():
+def Minimax_vs_Expectiminimax(board_size):
     """Minimax AI (X) goes first vs Expectiminimax AI (O)"""
-    board_size = 3
     game = TicTacToe(board_size)
     print("Minimax AI (X) vs Expectiminimax AI (O)")
     while True:
@@ -179,10 +144,8 @@ def Minimax_vs_Expectiminimax():
     winner = game.check_win()
     print("Minimax (X) wins!" if winner == 1 else "Expectiminimax (O) wins!" if winner == -1 else "It's a draw!")
 
-#——— AI vs AI —————————————————————————————————————————
-def Expectiminimax_vs_Minimax():
+def Expectiminimax_vs_Minimax(board_size):
     """Expectiminimax AI (X) goes first vs Minimax AI (O)"""
-    board_size = 3
     game = TicTacToe(board_size)
     print("Expectiminimax AI (X) vs Minimax AI (O)")
     while True:
@@ -211,10 +174,8 @@ def Expectiminimax_vs_Minimax():
     winner = game.check_win()
     print("Expectiminimax (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
-#——— AI vs AI Self-Play ——————————————————————————————————
-def Minimax_self_play():
+def Minimax_self_play(board_size):
     """Minimax AI (X) vs Minimax AI (O)"""
-    board_size = 3
     game = TicTacToe(board_size)
     print("Minimax AI (X) vs Minimax AI (O)")
     while True:
@@ -244,9 +205,8 @@ def Minimax_self_play():
     winner = game.check_win()
     print("Minimax (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
-def AlphaBeta_self_play():
+def AlphaBeta_self_play(board_size):
     """Alpha-Beta AI (X) vs Alpha-Beta AI (O)"""
-    board_size = 3
     game = TicTacToe(board_size)
     print("Alpha-Beta AI (X) vs Alpha-Beta AI (O)")
     while True:
@@ -276,9 +236,8 @@ def AlphaBeta_self_play():
     winner = game.check_win()
     print("Alpha-Beta (X) wins!" if winner == 1 else "Alpha-Beta (O) wins!" if winner == -1 else "It's a draw!")
 
-def Expectiminimax_self_play():
+def Expectiminimax_self_play(board_size):
     """Expectiminimax AI (X) vs Expectiminimax AI (O)"""
-    board_size = 3
     game = TicTacToe(board_size)
     print("Expectiminimax AI (X) vs Expectiminimax AI (O)")
     while True:
@@ -308,10 +267,8 @@ def Expectiminimax_self_play():
     winner = game.check_win()
     print("Expectiminimax (X) wins!" if winner == 1 else "Expectiminimax (O) wins!" if winner == -1 else "It's a draw!")
 
-
-def Gemini_self_play():
+def Gemini_self_play(board_size):
     """Gemini AI (X) vs Gemini AI (O)"""
-    board_size = 3
     game = TicTacToe(board_size)
     print("Gemini AI (X) vs Gemini AI (O)")
     was_wrong_x = [-1, -1, -1]
@@ -334,17 +291,14 @@ def Gemini_self_play():
     print(game)
     winner = game.check_win()
     print("Gemini (X) wins!" if winner == 1 else "Gemini (O) wins!" if winner == -1 else "It's a draw!")
-
 if __name__ == "__main__":
-    Human_vs_Minimax()
-    #Minimax_vs_Gemini()
-    #Gemini_vs_Minimax()
-    # Minimax_vs_AlphaBeta()
-    #AlphaBeta_vs_Minimax()
-    #Minimax_vs_Expectiminimax()
-    #Expectiminimax_vs_Minimax()
-    #Minimax_self_play()
-    # AlphaBeta_self_play()
-    #Expectiminimax_self_play()
-    # Gemini_self_play()
+    #Human_vs_Minimax(4)
+    #Gemini_vs_Minimax(4)
+    Minimax_vs_AlphaBeta(4)
+    #AlphaBeta_vs_Minimax(4)
+    #Expectiminimax_vs_Minimax(4)
+    #Minimax_self_play(3)
+    #AlphaBeta_self_play(3)
+    #Expectiminimax_self_play(3)
+    #Gemini_self_play(3)
 
