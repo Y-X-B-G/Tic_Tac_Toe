@@ -8,6 +8,43 @@ class MinimaxAI:#assuming 1 is AI and -1 is Playuer
         self.maximizing_player = maximizing_player
         self.max_depth = None # Initialize max_depth, will be set in find_best_move
 
+    def _calculate_ways_to_win(self, game_state: TicTacToe, player: int) -> int:
+        ways = 0
+        size = game_state.size
+        board = game_state.board
+        opponent = -player
+
+        #check rows
+        for r in range(size):
+            if opponent not in board[r]:
+                ways += 1
+
+        #check columns
+        for c in range(size):
+            col = [board[r][c] for r in range(size)]
+            if opponent not in col:
+                ways += 1
+
+        #check diagonals
+        diag1 = [board[i][i] for i in range(size)]
+        if opponent not in diag1:
+            ways += 1
+
+        diag2 = [board[i][size - 1 - i] for i in range(size)]
+        if opponent not in diag2:
+            ways += 1
+
+        return ways
+
+    def _heuristic_evaluation(self, game_state: TicTacToe) -> float:
+        our_ways = self._calculate_ways_to_win(game_state, self.maximizing_player)
+        opponent_ways = self._calculate_ways_to_win(game_state, -self.maximizing_player)
+
+        if (our_ways + opponent_ways) == 0:
+            return 0.0
+
+        return (our_ways - opponent_ways) / (our_ways + opponent_ways)
+
     def minimax(self, game_state: TicTacToe, depth: int) -> float:
         winner = game_state.check_win()
 
@@ -19,7 +56,7 @@ class MinimaxAI:#assuming 1 is AI and -1 is Playuer
             return 0  #Tie
         
         if self.max_depth is not None and depth == self.max_depth:
-            return 0 
+            return self._heuristic_evaluation(game_state)
 
         if game_state.get_current_player() == self.maximizing_player:#if the player that were maximizing's turn
             max_eval = -float('inf')# set the max (alpha) to -inf
