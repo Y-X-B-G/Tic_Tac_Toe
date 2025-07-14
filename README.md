@@ -19,7 +19,7 @@ or to spectate a game between the Minimax AI and a Gemini AI. It hosts a multi-a
 
 
 ## Setup
-To run Tic-Tac-Toe, open the repository in an IDE such as Visual Studio Code and create a ".env" file. In this file, type "GOOGLE_API_KEY=XXXXX", replacing the "XXXXX" with a Gemini API key. 
+ To run Tic-Tac-Toe, open the repository in an IDE such as Visual Studio Code and create a ".env" file. In this file, type "GOOGLE_API_KEY=XXXXX", replacing the "XXXXX" with a Gemini API key. Before executing the program, ensure you have ran the line "pip install google.generativeai" in terminal to install the necessary libraries to run the Gemini AI.
 
 
 ## Execution
