@@ -75,8 +75,8 @@ class TicTacToeGUI:
         mode = self.mode.get()
         if "AlphaBeta" in mode:
             self.ai = AlphaBetaAI(maximizing_player=-1)
-        elif "ExpectiMinimax" in mode:
-            self.ai = ExpectiMiniMaxAI(maximizing_player=-1)
+        elif "Expectiminimax" in mode:
+            self.ai = ExpectiminimaxAI(maximizing_player=-1)
         else:
             self.ai = MinimaxAI(maximizing_player=-1)
 
