@@ -2,115 +2,74 @@ from tic_tac_toe import TicTacToe
 from typing import Optional, List, Self
 import copy
 
-class ExpectiminimaxAI:#assuming 1 is AI and -1 is Playuer
-    def __init__(self, maximizing_player: int):
-        """
-        Initializes the MinimaxAI.
-        
-        @params
-            maximizing_player: The player (1 for X, -1 for O) for whom the AI is maximizing.
-        """
-        self.maximizing_player = maximizing_player
-    
-    def chance_node(self, game_state: TicTacToe, depth:int ) -> float:
-        """
-        Calculates the expected utility of a chance node in the Expectiminimax algorithm.
-        Add rest of docstring later. 
-        """
+class ExpectiminimaxAI:
+    def __init__(self, maximizing_player: int, max_depth: int = 4):
+        self.maximizing_player = maximizing_player # X: 1, O: -1
+        self.max_depth = max_depth
+
+    def chance_node(self, game_state: TicTacToe, depth: int):
+        filled_positions = []
+
+        for r in range(game_state.size):
+            for c in range(game_state.size):
+                if game_state.board[r][c] != 0:
+                    filled_positions.append((r, c))#find all the occupied spaces (non zero) and add them to the board
+        if not filled_positions:#if empty board , run expectiminimax normally
+            return self.expectiminimax(game_state, depth, is_chance_turn=True)
+        expected_value = 0
+        num_outcomes = len(filled_positions)
+
+        for r, c in filled_positions:
+            temp_game = copy.deepcopy(game_state)
+            temp_game.board[r][c] = 0#create a copy of the game with one of the filled positions set to 0
+            expected_value += self.expectiminimax(temp_game, depth + 1, is_chance_turn=True)#run expectiminimax
+
+        return expected_value / num_outcomes
+
+    def expectiminimax(self, game_state: TicTacToe, depth: int, is_chance_turn: bool = False):
         winner = game_state.check_win()
-
-        if winner == self.maximizing_player:
-            return float(1) #AI wins
-        elif winner == -self.maximizing_player:
-            return float(-1) #Opponent wins
-        elif winner == 0:
-            return (0) #Tie
+        if winner is not None:
+            if winner == self.maximizing_player:
+                return 1.0
+            elif winner == -self.maximizing_player:
+                return -1.0
+            else: #Tie
+                return 0.0
+            
+        if depth >= self.max_depth:
+            return 0.0 #return 0 at max depth
+        if not is_chance_turn and game_state.round > 0 and game_state.round % 2 == 0:#if the turn is even and not 0 then delete random piece
+            return self.chance_node(game_state, depth)
+        if game_state.get_current_player() == self.maximizing_player:
+            max_eval = -float('inf')
+            for next_state in game_state.next_states():
+                eval_val = self.expectiminimax(next_state, depth + 1)
+                max_eval = max(max_eval, eval_val)
+            return max_eval
         else:
-            stochastic_result = game_state.stochastic_delete()
-            if stochastic_result is None:
-                winner = game_state.check_win()
-                if winner == self.maximizing_player:
-                    return float(1)
-                elif winner == -self.maximizing_player:
-                    return float(-1)
-                elif winner == 0:
-                    return float(0)
-                else:
-                    # No winner and nothing left to delete → tie
-                    return float(0)
-            else:
-                row, col, value = stochastic_result
-                utility = self.expectiminimax(game_state, depth+1)
-                game_state.set_board(row,col,value)
-                return utility
+            min_eval = float('inf')
+            for next_state in game_state.next_states():
+                eval_val = self.expectiminimax(next_state, depth + 1)
+                min_eval = min(min_eval, eval_val)
+            return min_eval
 
-
-    def expectiminimax(self, game_state: TicTacToe, depth: int) -> float:
-        """
-        Implements the Expectiminimax algorithm
-
-
-        
-        @params
-            game_state: The current TicTacToe game state.
-            depth; depth of recursion (keeps track of turns)
-        @returns
-            Expected utility value of current game state
-        """
-        winner = game_state.check_win()
-        if winner == self.maximizing_player:
-            return float(1)
-        elif winner == -self.maximizing_player:
-            return float(-1)
-        elif winner == 0:
-            return float(0)
-
-        if depth %2 ==0:
-            return self.chance_node(game_state,depth)
-        else:
-        #MAX node(Player maximizing score)
-            if game_state.get_current_player() == self.maximizing_player:#if the player that were maximizing's turn
-                max_eval = -float('inf')# set the max (alpha) to -inf
-                for next_state in game_state.next_states():#go through all the next possible game states
-                    eval = self.expectiminimax(next_state, depth + 1)#keep going until all base case is found (by base case win loss or tie)
-                    max_eval = max(max_eval, eval)#find the max that leads to the highest scores
-                return max_eval
-            #MIN node(opponent minimizing score)
-            else:
-                min_eval = float('inf')#same thing as max but if were minimizing but for the ai
-                for next_state in game_state.next_states():
-                    eval = self.expectiminimax(next_state, depth + 1)
-                    min_eval = min(min_eval, eval)
-                return min_eval
-
-    def find_best_move(self, game_state: TicTacToe) -> Optional[tuple[int, int]]:
-        """
-        Finds the best move for the AI using the Expectiminimax algorithm.
-        
-        @params
-            game_state: The current TicTacToe game state.
-        @returns
-            A tuple (row, col) representing the best move, or None if no moves are possible.
-        """
-        best_score = -float('inf') if game_state.get_current_player() == self.maximizing_player else float('inf')#check whether were going for higherst or lowest score
+    def find_best_move(self, game_state: TicTacToe):
+        best_score = -float('inf') if game_state.get_current_player() == self.maximizing_player else float('inf')
         best_move = None
         
-        for r in range(game_state.size):#by row
-            for c in range(game_state.size):#by column
-                if game_state.board[r][c] == 0:#choose a spot
-                    temp_game = copy.deepcopy(game_state)#create a temporary game so we can try and see the best score we can get
+        for r in range(game_state.size):
+            for c in range(game_state.size):
+                if game_state.board[r][c] == 0:
+                    temp_game = copy.deepcopy(game_state)
                     temp_game.play(r, c)
                     
-                    score = self.expectiminimax(temp_game, depth = 1)#get the score of the game if we were to play the chosen spot
-
-                    if game_state.get_current_player() == self.maximizing_player:#if were going for highest score 
+                    score = self.expectiminimax(temp_game, depth=0)
+                    if game_state.get_current_player() == self.maximizing_player:
                         if score > best_score:
                             best_score = score
-                            best_move = (r, c)#current best moves ( may change after testing new spots)
-                    else: #if were going for the lowest score
+                            best_move = (r, c)
+                    else:
                         if score < best_score:
                             best_score = score
                             best_move = (r, c)
-        return best_move#return the best mvoe
-
-
+        return best_move
