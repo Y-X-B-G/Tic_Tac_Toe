@@ -4,6 +4,7 @@ from minimax import MinimaxAI
 from expectiminimax import ExpectiminimaxAI
 from alphabeta import AlphaBetaAI
 from Gemini import GeminiAI
+from csvLogger import CSVLogger
 
 def Human_vs_Minimax(board_size):
     """Human (X) goes first vs Minimax AI (O)"""
@@ -34,63 +35,106 @@ def Human_vs_Minimax(board_size):
             break
         time.sleep(0.2)
 
-def Gemini_vs_Minimax(board_size):
-    """Gemini AI (X) goes first vs Minimax AI (O)"""
+def Gemini_vs_Minimax(board_size, csv_logger):
     game = TicTacToe(board_size)
-    print("Gemini AI (X) vs Minimax AI (O)")
-    was_wrong = [-1,-1,-1]
+    was_wrong = [-1, -1, -1]
+    turn_count = 0
+
+    start_time = time.time()
+
     while True:
-        print(game)
+        # Gemini's move
         response = GeminiAI(game.board, was_wrong)
         r, c = map(int, response.split(","))
-        game.play(r, c)
-        print(f"X (Gemini) played at {r},{c}")
-        if game.check_win() is not None: break
-        
-        print(game)
+        result = game.play(r, c)
+        if result:
+            turn_count += 1
+        if game.check_win() is not None:
+            break
+
+        # Minimax's move
         move = MinimaxAI(maximizing_player=-1).find_best_move(game)
         if move is not None:
             r, c = move
-            game.play(r, c)
-            print(f"O (Minimax) played at {r},{c}")
+            result = game.play(r, c)
+            if result:
+                turn_count += 1
         else:
-            print("No valid moves left for O (Minimax).")
             break
-        if game.check_win() is not None: break
+        if game.check_win() is not None:
+            break
 
-    print(game)
-    winner = game.check_win()
-    print("Gemini (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
+    end_time = time.time()
+    total_runtime = end_time - start_time
 
-def Minimax_vs_AlphaBeta(board_size):
-    """Minimax AI (X) goes first vs Alpha-Beta AI (O)"""
+    winner_value = game.check_win()
+    if winner_value == 1:
+        winner = "X"
+    elif winner_value == -1:
+        winner = "O"
+    elif winner_value == 0:
+        winner = "Draw"
+    else:
+        winner = "Unknown"
+
+    csv_logger.log_game(
+        board_size=board_size,
+        player_x="GeminiAI",
+        player_o="MinimaxAI",
+        winner=winner,
+        num_turns=turn_count,
+        runtime_sec=total_runtime
+    )
+
+def Minimax_vs_AlphaBeta(board_size, csv_logger):
     game = TicTacToe(board_size)
-    print("Minimax AI (X) vs Alpha-Beta AI (O)")
+    turn_count = 0
+    start_time = time.time()
+
     while True:
-        print(game)
+        # Minimax X
         move = MinimaxAI(maximizing_player=1).find_best_move(game)
         if move is None:
-            print("No valid moves left for X (Minimax).")
             break
         r, c = move
-        game.play(r, c)
-        print(f"X (Minimax) played at {r},{c}")
-        if game.check_win() is not None: break
-        time.sleep(0.2)
-        print(game)
-        move = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-            print(f"O (Alpha-Beta) played at {r},{c}")
-        else:
-            print("No valid moves left for O (Alpha-Beta).")
+        result = game.play(r, c)
+        if result:
+            turn_count += 1
+        if game.check_win() is not None:
             break
-        if game.check_win() is not None: break
-        time.sleep(0.2)
-    print(game)
-    winner = game.check_win()
-    print("Minimax (X) wins!" if winner == 1 else "Alpha-Beta (O) wins!" if winner == -1 else "It's a draw!")
+
+        # AlphaBeta O
+        move = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
+        if move is None:
+            break
+        r, c = move
+        result = game.play(r, c)
+        if result:
+            turn_count += 1
+        if game.check_win() is not None:
+            break
+
+    end_time = time.time()
+    total_runtime = end_time - start_time
+
+    winner_value = game.check_win()
+    if winner_value == 1:
+        winner = "X"
+    elif winner_value == -1:
+        winner = "O"
+    elif winner_value == 0:
+        winner = "Draw"
+    else:
+        winner = "Unknown"
+
+    csv_logger.log_game(
+        board_size=board_size,
+        player_x="MinimaxAI",
+        player_o="AlphaBetaAI",
+        winner=winner,
+        num_turns=turn_count,
+        runtime_sec=total_runtime
+    )
 
 def AlphaBeta_vs_Minimax(board_size):
     """Alpha-Beta AI (X) goes first vs Minimax AI (O)"""
@@ -123,56 +167,53 @@ def AlphaBeta_vs_Minimax(board_size):
     winner = game.check_win()
     print("Alpha-Beta (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
-def Minimax_vs_Expectiminimax(board_size):
-    """Minimax AI (X) goes first vs Expectiminimax AI (O)"""
+def Minimax_vs_Expectiminimax(board_size, csv_logger):
     game = TicTacToe(board_size)
-    print("Minimax AI (X) vs Expectiminimax AI (O)")
-    while True:
-        print(game)
-        r, c = MinimaxAI(maximizing_player=1).find_best_move(game)
-        game.play(r, c)
-        print(f"X (Minimax) played at {r},{c}")
-        if game.check_win() is not None: break
-        time.sleep(0.2)
-        print(game)
-        r, c = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
-        game.play(r, c)
-        print(f"O (Expectiminimax) played at {r},{c}")
-        if game.check_win() is not None: break
-        time.sleep(0.2)
-    print(game)
-    winner = game.check_win()
-    print("Minimax (X) wins!" if winner == 1 else "Expectiminimax (O) wins!" if winner == -1 else "It's a draw!")
+    turn_count = 0
+    start_time = time.time()
 
-def Expectiminimax_vs_Minimax(board_size):
-    """Expectiminimax AI (X) goes first vs Minimax AI (O)"""
-    game = TicTacToe(board_size)
-    print("Expectiminimax AI (X) vs Minimax AI (O)")
     while True:
-        print(game)
-        move = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-            print(f"X (Expectiminimax) played at {r},{c}")
-        else:
-            print("No valid moves left for X (Expectiminimax).")
+        move = MinimaxAI(maximizing_player=1).find_best_move(game)
+        if move is None:
             break
-        if game.check_win() is not None: break
-        time.sleep(0.2)
-        print(game)
-        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-            print(f"O (Minimax) played at {r},{c}")
-        else:
-            print("No valid moves left for O (Minimax).")
+        r, c = move
+        result = game.play(r, c)
+        if result:
+            turn_count += 1
+        if game.check_win() is not None:
             break
-        if game.check_win() is not None: break
-    print(game)
-    winner = game.check_win()
-    print("Expectiminimax (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
+
+        move = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
+        if move is None:
+            break
+        r, c = move
+        result = game.play(r, c)
+        if result:
+            turn_count += 1
+        if game.check_win() is not None:
+            break
+
+    end_time = time.time()
+    total_runtime = end_time - start_time
+
+    winner_value = game.check_win()
+    if winner_value == 1:
+        winner = "X"
+    elif winner_value == -1:
+        winner = "O"
+    elif winner_value == 0:
+        winner = "Draw"
+    else:
+        winner = "Unknown"
+
+    csv_logger.log_game(
+        board_size=board_size,
+        player_x="MinimaxAI",
+        player_o="ExpectiminimaxAI",
+        winner=winner,
+        num_turns=turn_count,
+        runtime_sec=total_runtime
+    )
 
 def Minimax_self_play(board_size):
     """Minimax AI (X) vs Minimax AI (O)"""
@@ -291,14 +332,16 @@ def Gemini_self_play(board_size):
     print(game)
     winner = game.check_win()
     print("Gemini (X) wins!" if winner == 1 else "Gemini (O) wins!" if winner == -1 else "It's a draw!")
+
 if __name__ == "__main__":
-    Human_vs_Minimax(4)
-    #Gemini_vs_Minimax(5)
-    #Minimax_vs_AlphaBeta(4)
-    #AlphaBeta_vs_Minimax(4)
-    #Expectiminimax_vs_Minimax(4)
-    #Minimax_self_play(3)
-    #AlphaBeta_self_play(3)
-    #Expectiminimax_self_play(3)
-    #Gemini_self_play(3)
+    csv_logger = CSVLogger("ai_game_results.csv")
+
+    for _ in range(10):
+        Gemini_vs_Minimax(3, csv_logger)
+        Minimax_vs_AlphaBeta(3, csv_logger)
+        Minimax_vs_Expectiminimax(3, csv_logger)
+
+    csv_logger.close()
+
+
 
