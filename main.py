@@ -21,7 +21,7 @@ def Human_vs_Minimax():
             continue
         if (winner := game.check_win()) is not None:
             print(game)
-            print("🔵 Human (X) wins!" if winner == 1 else "🟠 Minimax AI (O) wins!" if winner == -1 else "🤝 It's a draw!")
+            print("Human (X) wins!" if winner == 1 else "Minimax AI (O) wins!" if winner == -1 else "It's a draw!")
             break
         move = MinimaxAI(maximizing_player=-1).find_best_move(game)
         if move is not None:
@@ -59,7 +59,7 @@ def Minimax_vs_Gemini():
         time.sleep(0.2)
     print(game)
     winner = game.check_win()
-    print("🔵 Minimax (X) wins!" if winner == 1 else "🟠 Gemini (O) wins!" if winner == -1 else "🤝 It's a draw!")
+    print("Minimax (X) wins!" if winner == 1 else "Gemini (O) wins!" if winner == -1 else "It's a draw!")
 
 #——— AI vs AI —————————————————————————————————————————
 def Gemini_vs_Minimax():
@@ -89,7 +89,7 @@ def Gemini_vs_Minimax():
 
     print(game)
     winner = game.check_win()
-    print("🔵 Gemini (X) wins!" if winner == 1 else "🟠 Minimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
+    print("Gemini (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
 #——— AI vs AI —————————————————————————————————————————
 def Minimax_vs_AlphaBeta():
@@ -121,7 +121,7 @@ def Minimax_vs_AlphaBeta():
         time.sleep(0.2)
     print(game)
     winner = game.check_win()
-    print("🔵 Minimax (X) wins!" if winner == 1 else "🟠 Alpha-Beta (O) wins!" if winner == -1 else "🤝 It's a draw!")
+    print("Minimax (X) wins!" if winner == 1 else "Alpha-Beta (O) wins!" if winner == -1 else "It's a draw!")
 
 #——— AI vs AI —————————————————————————————————————————
 def AlphaBeta_vs_Minimax():
@@ -154,7 +154,7 @@ def AlphaBeta_vs_Minimax():
         time.sleep(0.2)
     print(game)
     winner = game.check_win()
-    print("🔵 Alpha-Beta (X) wins!" if winner == 1 else "🟠 Minimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
+    print("Alpha-Beta (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
 #——— AI vs AI —————————————————————————————————————————
 def Minimax_vs_Expectiminimax():
@@ -177,7 +177,7 @@ def Minimax_vs_Expectiminimax():
         time.sleep(0.2)
     print(game)
     winner = game.check_win()
-    print("🔵 Minimax (X) wins!" if winner == 1 else "🟠 Expectiminimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
+    print("Minimax (X) wins!" if winner == 1 else "Expectiminimax (O) wins!" if winner == -1 else "It's a draw!")
 
 #——— AI vs AI —————————————————————————————————————————
 def Expectiminimax_vs_Minimax():
@@ -209,7 +209,7 @@ def Expectiminimax_vs_Minimax():
         if game.check_win() is not None: break
     print(game)
     winner = game.check_win()
-    print("🔵 Expectiminimax (X) wins!" if winner == 1 else "🟠 Minimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
+    print("Expectiminimax (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
 #——— AI vs AI Self-Play ——————————————————————————————————
 def Minimax_self_play():
@@ -242,7 +242,7 @@ def Minimax_self_play():
         time.sleep(0.2)
     print(game)
     winner = game.check_win()
-    print("🔵 Minimax (X) wins!" if winner == 1 else "🟠 Minimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
+    print("Minimax (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
 def AlphaBeta_self_play():
     """Alpha-Beta AI (X) vs Alpha-Beta AI (O)"""
@@ -274,7 +274,7 @@ def AlphaBeta_self_play():
         time.sleep(0.2)
     print(game)
     winner = game.check_win()
-    print("🔵 Alpha-Beta (X) wins!" if winner == 1 else "🟠 Alpha-Beta (O) wins!" if winner == -1 else "🤝 It's a draw!")
+    print("Alpha-Beta (X) wins!" if winner == 1 else "Alpha-Beta (O) wins!" if winner == -1 else "It's a draw!")
 
 def Expectiminimax_self_play():
     """Expectiminimax AI (X) vs Expectiminimax AI (O)"""
@@ -306,7 +306,7 @@ def Expectiminimax_self_play():
         time.sleep(0.2)
     print(game)
     winner = game.check_win()
-    print("🔵 Expectiminimax (X) wins!" if winner == 1 else "🟠 Expectiminimax (O) wins!" if winner == -1 else "🤝 It's a draw!")
+    print("Expectiminimax (X) wins!" if winner == 1 else "Expectiminimax (O) wins!" if winner == -1 else "It's a draw!")
 
 
 def Gemini_self_play():
@@ -333,18 +333,17 @@ def Gemini_self_play():
         time.sleep(0.2)
     print(game)
     winner = game.check_win()
-    print("🔵 Gemini (X) wins!" if winner == 1 else "🟠 Gemini (O) wins!" if winner == -1 else "🤝 It's a draw!")
+    print("Gemini (X) wins!" if winner == 1 else "Gemini (O) wins!" if winner == -1 else "It's a draw!")
 
 if __name__ == "__main__":
-    # Uncomment one matchup to run:
-    # Human_vs_Minimax()
+    Human_vs_Minimax()
     #Minimax_vs_Gemini()
     #Gemini_vs_Minimax()
     # Minimax_vs_AlphaBeta()
     #AlphaBeta_vs_Minimax()
     #Minimax_vs_Expectiminimax()
-    Expectiminimax_vs_Minimax()
-     #Minimax_self_play()
+    #Expectiminimax_vs_Minimax()
+    #Minimax_self_play()
     # AlphaBeta_self_play()
     #Expectiminimax_self_play()
     # Gemini_self_play()
