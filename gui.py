@@ -12,7 +12,7 @@ class TicTacToeGUI:
 
         self.mode = tk.StringVar(value="Player vs Minimax")
         self.size_var = tk.StringVar(value="3x3")
-        self.board_size = int(self.size_var.get().split("x")[0])  # 👈 FIX HERE
+        self.board_size = int(self.size_var.get().split("x")[0])
 
         self.buttons = []
         self.board_frame = None
