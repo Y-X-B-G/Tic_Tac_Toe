@@ -292,7 +292,7 @@ def Gemini_self_play(board_size):
     winner = game.check_win()
     print("Gemini (X) wins!" if winner == 1 else "Gemini (O) wins!" if winner == -1 else "It's a draw!")
 if __name__ == "__main__":
-    Human_vs_Minimax(4)
+    #Human_vs_Minimax(4)
     #Gemini_vs_Minimax(5)
     #Minimax_vs_AlphaBeta(4)
     #AlphaBeta_vs_Minimax(4)
