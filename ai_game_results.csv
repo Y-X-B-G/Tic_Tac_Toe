@@ -27,7 +27,7 @@ GameID,BoardSize,PlayerX,PlayerO,Winner,NumTurns,TotalRunTimeSec
 26,3x3,MinimaxAI,ExpectiminimaxAI,X,7,9.405250
 27,3x3,GeminiAI,MinimaxAI,Draw,9,3.784438
 28,3x3,AlphaBetaAI,MinimaxAI,Draw,0,1.880045
-29,3x3,ExpectiminimaxAI,MinimaxAI,Draw,0,1.270127
+29,3x3,ExpectiminimaxAI,MinimaxAI,Draw,0,1.270127*
 30,3x3,MinimaxAI,MinimaxAI,Draw,0,9.786347
 31,3x3,AlphaBetaAI,AlphaBetaAI,Draw,0,0.807090
 32,3x3,ExpectiminimaxAI,ExpectiminimaxAI,X,0,0.393443
