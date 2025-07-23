@@ -132,15 +132,25 @@ def Minimax_vs_Expectiminimax(board_size):                                      
     print("Minimax AI (X) vs Expectiminimax AI (O)")
     while True:
         print(game)
-        r, c = MinimaxAI(maximizing_player=1).find_best_move(game)
-        game.play(r, c)
-        print(f"X (Minimax) played at {r},{c}")
+        move = MinimaxAI(maximizing_player=1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"X (Minimax) played at {r},{c}")
+        else:
+            print("No valid moves left for X (Minimax).")
+            break
         if game.check_win() is not None: break
         time.sleep(0.2)
         print(game)
-        r, c = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
-        game.play(r, c)
-        print(f"O (Expectiminimax) played at {r},{c}")
+        move = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+            print(f"O (Expectiminimax) played at {r},{c}")
+        else:
+            print("No valid moves left for O (Expectiminimax).")
+            break
         if game.check_win() is not None: break
         time.sleep(0.2)
     print(game)
@@ -704,16 +714,17 @@ if __name__ == "__main__":
     #Expectiminimax_vs_Minimax(4)
     #Minimax_self_play(3)
     #AlphaBeta_self_play(3)
-    #Expectiminimax_self_play(3)
+    #Expectiminimax_self_play(4)
     #Gemini_self_play(3)
 
-    csv_logger = CSVLogger("ai_game_results.csv")
+    
+    csv_logger = CSVLogger("ai_game_results2.csv")
 
 
     #Gemini_vs_Minimax_CSV(3, csv_logger)
     board_sizes = [3,4,5]
     number_of_test_cycles = 10
-    number_of_test_cycles = number_of_test_cycles +1 # to get correct range
+    number_of_test_cycles = number_of_test_cycles +1 # to g  range
     for size in range(len(board_sizes)):
         board_size = board_sizes[size]
         for i in range(1,number_of_test_cycles):
@@ -721,7 +732,7 @@ if __name__ == "__main__":
             print(f"board size: {board_size}\n ")
 
             print("Running Minimax VS Alpha Beta")
-            Minimax_vs_AlphaBeta_CSV(board_size, csv_logger)
+            Minimax_vs_AlphaBeta_CSV(board_size, csv_logger) 
 
             print("Running Minimax VS Expectminimax")
             Minimax_vs_Expectiminimax_CSV(board_size, csv_logger)
@@ -744,9 +755,7 @@ if __name__ == "__main__":
             print("Running Expectminimax vs Expectminimax")
             Expectiminimax_self_play_CSV(board_size,csv_logger)
             print("\n===============================================================\n")
-
-    
-    print(f"Testing completed")
-    # ... add other AI vs AI here
-
     csv_logger.close()
+    
+print(f"Testing completed")
+# ... add other AI vs AI here
