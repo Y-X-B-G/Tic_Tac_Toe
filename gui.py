@@ -104,6 +104,8 @@ class TicTacToeGUI:
             self.master.after(1000, self.run_ai_vs_ai)
 
     def handle_click(self, r, c):
+        if self.game is None:
+            return
         if self.game.get_board()[r][c] != 0 or self.game.check_win() is not None:
             return
 
@@ -122,13 +124,15 @@ class TicTacToeGUI:
             self.master.after(500, self.ai_move)
 
     def ai_move(self):
+        if self.game is None:
+            return
         player = self.game.get_current_player()
         ai = self.ai_X if player == 1 else self.ai_O
 
         if isinstance(ai, (MinimaxAI, AlphaBetaAI, ExpectiminimaxAI)):
             move = ai.find_best_move(self.game)
         elif ai == GeminiAI:
-            move = GeminiAI(self.game.get_board(), 0)
+            move = GeminiAI(self.game.get_board(), (0,))
             try:
                 move = tuple(map(int, move.strip().split(",")))
             except:
@@ -145,7 +149,7 @@ class TicTacToeGUI:
                 self.check_game_over()
 
     def run_ai_vs_ai(self):
-        if self.game.check_win() is not None:
+        if self.game is None or self.game.check_win() is not None:
             self.check_game_over()
             return
 
@@ -155,7 +159,7 @@ class TicTacToeGUI:
         if isinstance(ai, (MinimaxAI, AlphaBetaAI, ExpectiminimaxAI)):
             move = ai.find_best_move(self.game)
         elif ai == GeminiAI:
-            move = GeminiAI(self.game.get_board(), 0)
+            move = GeminiAI(self.game.get_board(), (0,))
             try:
                 move = tuple(map(int, move.strip().split(",")))
             except:
@@ -187,6 +191,8 @@ class TicTacToeGUI:
         )
 
     def check_game_over(self):
+        if self.game is None:
+            return False
         winner = self.game.check_win()
         if winner is not None:
             if winner == 1:

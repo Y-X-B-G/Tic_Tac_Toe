@@ -39,7 +39,7 @@ class ExpectiminimaxAI:
         if depth >= self.max_depth:
             return 0.0 #return 0 at max depth
         if not is_chance_turn and game_state.round > 0 and game_state.round % 2 == 0:#if the turn is even and not 0 then delete random piece
-            return self.chance_node(game_state, depth, alpha, beta) #We can't have alpha beta here
+            return self.chance_node(game_state, depth, alpha, beta) #alpha be
         
         if game_state.get_current_player() == self.maximizing_player:
             max_eval = -float('inf')
