@@ -316,11 +316,20 @@ def Gemini_vs_Minimax_CSV(board_size, csv_logger):
     turn_count = 0
 
     start_time = time.time()
+    gemini_time = 0
+    mini_time = 0
+    print("HI")
 
     while True:
         # Gemini's move
-        response = GeminiAI(game.board, was_wrong)
+        a1_start = time.time()
+        response = GeminiAI(game.board, was_wrong, 10)
+        print(response)
         move = parse_gemini_response(response, board_size)
+        print("response?")
+        a1_end = time.time()
+        gemini_time += a1_start- a1_end
+        
         if move is None:
             valid_moves = [
                 (r, c)
@@ -337,11 +346,16 @@ def Gemini_vs_Minimax_CSV(board_size, csv_logger):
         result = game.play(r, c)
         if result:
             turn_count += 1
+        print(game)
         if game.check_win() is not None:
             break
 
         # Minimax's move
+        a2_start = time.time()
         move = MinimaxAI(maximizing_player=-1).find_best_move(game)
+        a2_end = time.time()
+
+        mini_time += a2_start - a2_end
         if move is not None:
             r, c = move
             result = game.play(r, c)
@@ -349,6 +363,7 @@ def Gemini_vs_Minimax_CSV(board_size, csv_logger):
                 turn_count += 1
         else:
             break
+        print(game)
         if game.check_win() is not None:
             break
 
@@ -368,21 +383,29 @@ def Gemini_vs_Minimax_CSV(board_size, csv_logger):
     csv_logger.log_game(
         board_size=board_size,
         player_x="GeminiAI",
+        playerx_runtime = gemini_time,
         player_o="MinimaxAI",
+        playero_runtime = mini_time,
         winner=winner,
         num_turns=turn_count,
         runtime_sec=total_runtime
     )
     time.sleep(0.2)
+    total_runtime -= 0.2
 
 def Minimax_vs_AlphaBeta_CSV(board_size, csv_logger):
     game = TicTacToe(board_size)
     turn_count = 0
     start_time = time.time()
-
+    a1_time = 0
+    a2_time = 0
     while True:
         # Minimax X
+        a1_start = time.time()
         move = MinimaxAI(maximizing_player=1).find_best_move(game)
+        a1_end = time.time()
+
+        a1_time += a1_start - a1_end
         if move is None:
             break
         r, c = move
@@ -393,7 +416,10 @@ def Minimax_vs_AlphaBeta_CSV(board_size, csv_logger):
             break
 
         # AlphaBeta O
+        a2_start = time.time()
         move = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
+        a2_end = time.time()
+        a2_time += a2_start- a2_end
         if move is None:
             break
         r, c = move
@@ -419,7 +445,9 @@ def Minimax_vs_AlphaBeta_CSV(board_size, csv_logger):
     csv_logger.log_game(
         board_size=board_size,
         player_x="MinimaxAI",
+        playerx_runtime = a1_time,
         player_o="AlphaBetaAI",
+        playero_runtime = a2_time,
         winner=winner,
         num_turns=turn_count,
         runtime_sec=total_runtime
@@ -428,9 +456,14 @@ def Minimax_vs_Expectiminimax_CSV(board_size, csv_logger):
     game = TicTacToe(board_size)
     turn_count = 0
     start_time = time.time()
-
+    a1_time = 0
+    a2_time = 0
     while True:
+        a1_start = time.time()
         move = MinimaxAI(maximizing_player=1).find_best_move(game)
+        a1_end = time.time()
+
+        a1_time += a1_start - a1_end
         if move is None:
             break
         r, c = move
@@ -439,8 +472,11 @@ def Minimax_vs_Expectiminimax_CSV(board_size, csv_logger):
             turn_count += 1
         if game.check_win() is not None:
             break
-
+        a2_start = time.time()
         move = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
+        a2_end = time.time()
+        a2_time += a2_start- a2_end
+
         if move is None:
             break
         r, c = move
@@ -466,243 +502,368 @@ def Minimax_vs_Expectiminimax_CSV(board_size, csv_logger):
     csv_logger.log_game(
         board_size=board_size,
         player_x="MinimaxAI",
+        playerx_runtime = a1_time,
         player_o="ExpectiminimaxAI",
+        playero_runtime = a2_time,
         winner=winner,
         num_turns=turn_count,
         runtime_sec=total_runtime
     )
-
-def AlphaBeta_vs_Minimax_CSV(board_size,csv_logger):                                               
-    """Alpha-Beta AI (X) goes first vs Minimax AI (O)"""
+def Gemini_vs_AlphaBeta_CSV(board_size, csv_logger):
     game = TicTacToe(board_size)
+    was_wrong = [-1, -1, -1]
     turn_count = 0
+
     start_time = time.time()
-    while True:
-        move = AlphaBetaAI(maximizing_player=1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-        else:
-            break
-        if game.check_win() is not None: break
-
-        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-        else:
-            break
-        if game.check_win() is not None: break
-
-    end_time = time.time()
-    total_runtime = end_time - start_time
-    winner_value = game.check_win()
-    if winner_value == 1:
-        winner = "X"
-    elif winner_value == -1:
-        winner = "O"
-    elif winner_value == 0:
-        winner = "Draw"
-    else:
-        winner = "Unknown"
-
-    csv_logger.log_game(
-        board_size=board_size,
-        player_x="AlphaBetaAI",
-        player_o="MinimaxAI",
-        winner=winner,
-        num_turns=turn_count,
-        runtime_sec=total_runtime
-    )
-
-def Expectiminimax_vs_Minimax_CSV(board_size,csv_logger):                        
-    """Expectiminimax AI (X) goes first vs Minimax AI (O)"""
-    game = TicTacToe(board_size)
-    turn_count = 0
-    start_time = time.time()
-    while True:
-
-        move = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-        else:
-            break
-        if game.check_win() is not None: break
-
-        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-
-        else:
-
-            break
-        if game.check_win() is not None: break
-
-    end_time = time.time()
-    total_runtime = end_time - start_time
-    winner_value = game.check_win()
-    if winner_value == 1:
-        winner = "X"
-    elif winner_value == -1:
-        winner = "O"
-    elif winner_value == 0:
-        winner = "Draw"
-    else:
-        winner = "Unknown"
-
-    csv_logger.log_game(
-        board_size=board_size,
-        player_x="ExpectiminimaxAI",
-        player_o="MinimaxAI",
-        winner=winner,
-        num_turns=turn_count,
-        runtime_sec=total_runtime
-    )
-
-def Minimax_self_play_CSV(board_size,csv_logger):                                                
-    """Minimax AI (X) vs Minimax AI (O)"""
-    game = TicTacToe(board_size)
-    turn_count = 0
-    start_time = time.time()
+    gemini_runtime = 0
+    opponent_runtime = 0
 
     while True:
- 
-        move = MinimaxAI(maximizing_player=1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-    
+        gem_start = time.time()
+        response = GeminiAI(game.board, was_wrong)
+        gem_end = time.time()
+        gemini_runtime += (gem_end - gem_start)
+
+        move = parse_gemini_response(response, board_size)
+        if move is None:
+            valid_moves = [(r, c) for r in range(board_size) for c in range(board_size) if game.board[r][c] == 0]
+            if valid_moves:
+                r, c = random.choice(valid_moves)
+            else:
+                break
         else:
-           
-            break
-        if game.check_win() is not None: break
-  
-        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
-        if move is not None:
             r, c = move
-            game.play(r, c)
-        else:
+
+        if game.play(r, c):
+            turn_count += 1
+        if game.check_win() is not None:
             break
-        if game.check_win() is not None: break
 
-    end_time = time.time()
-    total_runtime = end_time - start_time
-    winner_value = game.check_win()
-    if winner_value == 1:
-        winner = "X"
-    elif winner_value == -1:
-        winner = "O"
-    elif winner_value == 0:
-        winner = "Draw"
-    else:
-        winner = "Unknown"
-
-    csv_logger.log_game(
-        board_size=board_size,
-        player_x="MinimaxAI",
-        player_o="MinimaxAI",
-        winner=winner,
-        num_turns=turn_count,
-        runtime_sec=total_runtime
-    )
-def Expectiminimax_self_play_CSV(board_size,csv_logger):
-    """Expectiminimax AI (X) vs Expectiminimax AI (O)"""
-    game = TicTacToe(board_size)
-    turn_count = 0
-    start_time = time.time()
-
-    while True:
-     
-        move = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-           
-        else:
-           
-            break
-        if game.check_win() is not None: break
-   
-        move = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-
-        else:
-
-            break
-        if game.check_win() is not None: break
-
-    end_time = time.time()
-    total_runtime = end_time - start_time
-    winner_value = game.check_win()
-    if winner_value == 1:
-        winner = "X"
-    elif winner_value == -1:
-        winner = "O"
-    elif winner_value == 0:
-        winner = "Draw"
-    else:
-        winner = "Unknown"
-
-    csv_logger.log_game(
-        board_size=board_size,
-        player_x="ExpectiminimaxAI",
-        player_o="ExpectiminimaxAI",
-        winner=winner,
-        num_turns=turn_count,
-        runtime_sec=total_runtime
-    )
-
-def AlphaBeta_self_play_CSV(board_size,csv_logger): #NO CSV
-    """Alpha-Beta AI (X) vs Alpha-Beta AI (O)"""
-    game = TicTacToe(board_size)
-    turn_count = 0
-    start_time = time.time()
-
-    while True:
-
-        move = AlphaBetaAI(maximizing_player=1).find_best_move(game)
-        if move is not None:
-            r, c = move
-            game.play(r, c)
-
-        else:
-
-            break
-        if game.check_win() is not None: break
-
+        opp_start = time.time()
         move = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
+        opp_end = time.time()
+        opponent_runtime += (opp_end - opp_start)
+
         if move is not None:
             r, c = move
-            game.play(r, c)
-
+            if game.play(r, c):
+                turn_count += 1
         else:
-    
             break
-        if game.check_win() is not None: break
-    end_time = time.time()
-    total_runtime = end_time - start_time
+        if game.check_win() is not None:
+            break
+
+    total_runtime = time.time() - start_time
     winner_value = game.check_win()
-    if winner_value == 1:
-        winner = "X"
-    elif winner_value == -1:
-        winner = "O"
-    elif winner_value == 0:
-        winner = "Draw"
-    else:
-        winner = "Unknown"
+    winner = "X" if winner_value == 1 else "O" if winner_value == -1 else "Draw"
 
     csv_logger.log_game(
         board_size=board_size,
-        player_x="AlphaBetaAI",
+        player_x="GeminiAI",
+        playerx_runtime=gemini_runtime,
         player_o="AlphaBetaAI",
+        playero_runtime=opponent_runtime,
         winner=winner,
         num_turns=turn_count,
         runtime_sec=total_runtime
     )
+
+
+def Gemini_vs_Expectiminimax_CSV(board_size, csv_logger):
+    game = TicTacToe(board_size)
+    was_wrong = [-1, -1, -1]
+    turn_count = 0
+
+    start_time = time.time()
+    gemini_runtime = 0
+    opponent_runtime = 0
+
+    while True:
+        gem_start = time.time()
+        response = GeminiAI(game.board, was_wrong)
+        gem_end = time.time()
+        gemini_runtime += (gem_end - gem_start)
+
+        move = parse_gemini_response(response, board_size)
+        if move is None:
+            valid_moves = [(r, c) for r in range(board_size) for c in range(board_size) if game.board[r][c] == 0]
+            if valid_moves:
+                r, c = random.choice(valid_moves)
+            else:
+                break
+        else:
+            r, c = move
+
+        if game.play(r, c):
+            turn_count += 1
+        if game.check_win() is not None:
+            break
+
+        opp_start = time.time()
+        move = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
+        opp_end = time.time()
+        opponent_runtime += (opp_end - opp_start)
+
+        if move is not None:
+            r, c = move
+            if game.play(r, c):
+                turn_count += 1
+        else:
+            break
+        if game.check_win() is not None:
+            break
+
+    total_runtime = time.time() - start_time
+    winner_value = game.check_win()
+    winner = "X" if winner_value == 1 else "O" if winner_value == -1 else "Draw"
+
+    csv_logger.log_game(
+        board_size=board_size,
+        player_x="GeminiAI",
+        playerx_runtime=gemini_runtime,
+        player_o="ExpectiminimaxAI",
+        playero_runtime=opponent_runtime,
+        winner=winner,
+        num_turns=turn_count,
+        runtime_sec=total_runtime
+    )
+
+
+def AlphaBeta_vs_Minimax_CSV(board_size, csv_logger):
+    game = TicTacToe(board_size)
+    turn_count = 0
+    start_time = time.time()
+    alpha_time = 0
+    mini_time = 0
+
+    while True:
+        a_start = time.time()
+        move = AlphaBetaAI(maximizing_player=1).find_best_move(game)
+        a_end = time.time()
+        alpha_time += (a_end - a_start)
+
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+        else:
+            break
+        if game.check_win() is not None: break
+
+        m_start = time.time()
+        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
+        m_end = time.time()
+        mini_time += (m_end - m_start)
+
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+        else:
+            break
+        if game.check_win() is not None: break
+
+    total_runtime = time.time() - start_time
+    winner_value = game.check_win()
+    winner = "X" if winner_value == 1 else "O" if winner_value == -1 else "Draw"
+
+    csv_logger.log_game(
+        board_size=board_size,
+        player_x="AlphaBetaAI",
+        playerx_runtime=alpha_time,
+        player_o="MinimaxAI",
+        playero_runtime=mini_time,
+        winner=winner,
+        num_turns=turn_count,
+        runtime_sec=total_runtime
+    )
+
+def Expectiminimax_vs_Minimax_CSV(board_size, csv_logger):
+    game = TicTacToe(board_size)
+    turn_count = 0
+    start_time = time.time()
+    exp_time = 0
+    mini_time = 0
+
+    while True:
+        e_start = time.time()
+        move = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
+        e_end = time.time()
+        exp_time += (e_end - e_start)
+
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+        else:
+            break
+        if game.check_win() is not None: break
+
+        m_start = time.time()
+        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
+        m_end = time.time()
+        mini_time += (m_end - m_start)
+
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+        else:
+            break
+        if game.check_win() is not None: break
+
+    total_runtime = time.time() - start_time
+    winner_value = game.check_win()
+    winner = "X" if winner_value == 1 else "O" if winner_value == -1 else "Draw"
+
+    csv_logger.log_game(
+        board_size=board_size,
+        player_x="ExpectiminimaxAI",
+        playerx_runtime=exp_time,
+        player_o="MinimaxAI",
+        playero_runtime=mini_time,
+        winner=winner,
+        num_turns=turn_count,
+        runtime_sec=total_runtime
+    )
+
+def Minimax_self_play_CSV(board_size, csv_logger):
+    game = TicTacToe(board_size)
+    turn_count = 0
+    start_time = time.time()
+    x_time = 0
+    o_time = 0
+
+    while True:
+        x_start = time.time()
+        move = MinimaxAI(maximizing_player=1).find_best_move(game)
+        x_end = time.time()
+        x_time += (x_end - x_start)
+
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+        else:
+            break
+        if game.check_win() is not None: break
+
+        o_start = time.time()
+        move = MinimaxAI(maximizing_player=-1).find_best_move(game)
+        o_end = time.time()
+        o_time += (o_end - o_start)
+
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+        else:
+            break
+        if game.check_win() is not None: break
+
+    total_runtime = time.time() - start_time
+    winner_value = game.check_win()
+    winner = "X" if winner_value == 1 else "O" if winner_value == -1 else "Draw"
+
+    csv_logger.log_game(
+        board_size=board_size,
+        player_x="MinimaxAI",
+        playerx_runtime=x_time,
+        player_o="MinimaxAI",
+        playero_runtime=o_time,
+        winner=winner,
+        num_turns=turn_count,
+        runtime_sec=total_runtime
+    )
+
+def Expectiminimax_self_play_CSV(board_size, csv_logger):
+    game = TicTacToe(board_size)
+    turn_count = 0
+    start_time = time.time()
+    x_time = 0
+    o_time = 0
+
+    while True:
+        x_start = time.time()
+        move = ExpectiminimaxAI(maximizing_player=1).find_best_move(game)
+        x_end = time.time()
+        x_time += (x_end - x_start)
+
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+        else:
+            break
+        if game.check_win() is not None: break
+
+        o_start = time.time()
+        move = ExpectiminimaxAI(maximizing_player=-1).find_best_move(game)
+        o_end = time.time()
+        o_time += (o_end - o_start)
+
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+        else:
+            break
+        if game.check_win() is not None: break
+
+    total_runtime = time.time() - start_time
+    winner_value = game.check_win()
+    winner = "X" if winner_value == 1 else "O" if winner_value == -1 else "Draw"
+
+    csv_logger.log_game(
+        board_size=board_size,
+        player_x="ExpectiminimaxAI",
+        playerx_runtime=x_time,
+        player_o="ExpectiminimaxAI",
+        playero_runtime=o_time,
+        winner=winner,
+        num_turns=turn_count,
+        runtime_sec=total_runtime
+    )
+
+def AlphaBeta_self_play_CSV(board_size, csv_logger):
+    game = TicTacToe(board_size)
+    turn_count = 0
+    start_time = time.time()
+    x_time = 0
+    o_time = 0
+
+    while True:
+        x_start = time.time()
+        move = AlphaBetaAI(maximizing_player=1).find_best_move(game)
+        x_end = time.time()
+        x_time += (x_end - x_start)
+
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+        else:
+            break
+        if game.check_win() is not None: break
+
+        o_start = time.time()
+        move = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
+        o_end = time.time()
+        o_time += (o_end - o_start)
+
+        if move is not None:
+            r, c = move
+            game.play(r, c)
+        else:
+            break
+        if game.check_win() is not None: break
+
+    total_runtime = time.time() - start_time
+    winner_value = game.check_win()
+    winner = "X" if winner_value == 1 else "O" if winner_value == -1 else "Draw"
+
+    csv_logger.log_game(
+        board_size=board_size,
+        player_x="AlphaBetaAI",
+        playerx_runtime=x_time,
+        player_o="AlphaBetaAI",
+        playero_runtime=o_time,
+        winner=winner,
+        num_turns=turn_count,
+        runtime_sec=total_runtime
+    )
+
 
 
 
@@ -717,13 +878,13 @@ if __name__ == "__main__":
     #Expectiminimax_self_play(4)
     #Gemini_self_play(3)
 
-    
+
     csv_logger = CSVLogger("ai_game_results2.csv")
 
 
-    #Gemini_vs_Minimax_CSV(3, csv_logger)
-    board_sizes = [3,4,5]
-    number_of_test_cycles = 10
+    
+    board_sizes = [5,6]
+    number_of_test_cycles = 5
     number_of_test_cycles = number_of_test_cycles +1 # to g  range
     for size in range(len(board_sizes)):
         board_size = board_sizes[size]
@@ -731,6 +892,14 @@ if __name__ == "__main__":
             print(f"\n running test Cycle: {i}")
             print(f"board size: {board_size}\n ")
 
+            print("Running Gemini vs Minimax")
+            Gemini_vs_Minimax_CSV(board_size, csv_logger)
+
+            print("Running Gemini VS Alphabeta")
+            Gemini_vs_AlphaBeta_CSV(board_size,csv_logger)
+
+            print("Running Gemini VS Expectminimax")
+            Gemini_vs_Expectiminimax_CSV(board_size,csv_logger)
             print("Running Minimax VS Alpha Beta")
             Minimax_vs_AlphaBeta_CSV(board_size, csv_logger) 
 
@@ -754,6 +923,8 @@ if __name__ == "__main__":
 
             print("Running Expectminimax vs Expectminimax")
             Expectiminimax_self_play_CSV(board_size,csv_logger)
+
+
             print("\n===============================================================\n")
     csv_logger.close()
     
