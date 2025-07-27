@@ -3,9 +3,6 @@ from tkinter import messagebox
 from tic_tac_toe import TicTacToe
 from minimax import MinimaxAI
 from Gemini import GeminiAI
-from alphabeta import AlphaBetaAI
-from expectiminimax import ExpectiminimaxAI
-
 
 class TicTacToeGUI:
     def __init__(self, master):
@@ -20,7 +17,7 @@ class TicTacToeGUI:
         self.buttons = []
         self.board_frame = None
         self.game = None
-        self.ai = None 
+        self.ai = MinimaxAI(maximizing_player=-1)
 
         self.create_menu()
         self.create_board()
@@ -31,13 +28,13 @@ class TicTacToeGUI:
         frame.pack(pady=10)
 
         tk.Label(frame, text="Game Mode:", font=("Courier", 12)).pack(side=tk.LEFT, padx=5)
-        modes = ["Player vs Minimax", "Gemini vs Minimax", "Player vs AlphaBeta", "Gemini vs AlphaBeta", "Player vs ExpectiMinimax", "Gemini vs ExpectiMinimax"]
+        modes = ["Player vs Minimax", "Gemini vs Minimax"]
         self.mode_dropdown = tk.OptionMenu(frame, self.mode, *modes, command=lambda _: self.reset_game())
         self.mode_dropdown.config(width=18, font=("Courier", 12))
         self.mode_dropdown.pack(side=tk.LEFT)
 
         tk.Label(frame, text="Board Size:", font=("Courier", 12)).pack(side=tk.LEFT, padx=5)
-        sizes = [f"{i}x{i}" for i in range(3, 7)]
+        sizes = [f"{i}x{i}" for i in range(3, 7)]  # From 3x3 to 6x6
         self.size_dropdown = tk.OptionMenu(frame, self.size_var, *sizes, command=lambda _: self.reset_game())
         self.size_dropdown.config(width=6, font=("Courier", 12))
         self.size_dropdown.pack(side=tk.LEFT)
@@ -70,23 +67,15 @@ class TicTacToeGUI:
     def reset_game(self):
         size_str = self.size_var.get()
         self.board_size = int(size_str.split("x")[0])
+
         self.game = TicTacToe(self.board_size)
-
-        mode = self.mode.get()
-        if "AlphaBeta" in mode:
-            self.ai = AlphaBetaAI(maximizing_player=-1)
-        elif "ExpectiMinimax" in mode:
-            self.ai = ExpectiMiniMaxAI(maximizing_player=-1)
-        else:
-            self.ai = MinimaxAI(maximizing_player=-1)
-
         self.create_board()
 
-        if "vs Gemini" in mode:
+        if self.mode.get() == "Gemini vs Minimax":
             self.master.after(1000, self.run_ai_vs_ai)
 
     def handle_click(self, r, c):
-        if "Player vs" not in self.mode.get():
+        if self.mode.get() != "Player vs Minimax":
             return
         if self.game.get_board()[r][c] != 0 or self.game.check_win() is not None:
             return
@@ -96,7 +85,6 @@ class TicTacToeGUI:
         if self.check_game_over():
             return
         self.master.after(500, self.ai_move)
-
 
     def ai_move(self):
         move = self.ai.find_best_move(self.game)
@@ -130,7 +118,6 @@ class TicTacToeGUI:
                 self.update_button(r, c, -1)
 
         self.master.after(1000, self.run_ai_vs_ai)
-
 
     def update_button(self, r, c, player):
         symbol = "X" if player == 1 else "O"

@@ -47,6 +47,25 @@ def GeminiAI(current_board, wrong):
           For example: 1,1"""
     response = model.generate_content(prompt)
         
-    return response.text.strip()  
+    return response.text.strip()
+
+def parse_gemini_response(response,board_size):
+    """
+    Parses Gemini's text response into a move tuple (row,col)
+    Returns None if parsing fails
+    """
+    try: 
+        #find frist line that looks like digits
+        lines  = response.split("\n")
+        for line in lines:
+            parts = line.strip().split(",")
+            if len(parts) == 2:
+                r,c = int(parts[0]), int(parts[1])
+                if 0 <= r < board_size and 0 <= c < board_size:
+                    return (r,c)
+    except Exception: 
+        pass
+
+    return None
 
 
