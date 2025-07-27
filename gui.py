@@ -192,7 +192,7 @@ class TicTacToeGUI:
         move = None
         retries = 0
         max_retries = 40
-        num_retries = 40
+      
 
         while retries < max_retries:
             if isinstance(ai, (MinimaxAI, AlphaBetaAI, ExpectiminimaxAI)):
@@ -201,7 +201,7 @@ class TicTacToeGUI:
             elif ai == GeminiAI:
                 if len(board) != self.board_size or len(board[0]) != self.board_size:
                     print(f"WARNING: Gemini received mismatched board size: {len(board)}x{len(board[0])} expected {self.board_size}x{self.board_size}")
-                gemini_output = GeminiAI(board, wrong,num_retries)
+                gemini_output = GeminiAI(board, wrong)
                 try:
                     r, c = map(int, gemini_output.strip().split(","))
                     if not (0 <= r < board_size and 0 <= c < board_size):
@@ -218,7 +218,6 @@ class TicTacToeGUI:
                     print(f"Gemini invalid move: {e}")
                     wrong = (1,) + self.previous_gemini_move if self.previous_gemini_move else (0,)
                     retries += 1
-                    num_retries -=1 
                     continue
             else:
                 return

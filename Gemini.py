@@ -6,7 +6,7 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 genai.configure(api_key=GOOGLE_API_KEY)
 MODEL_NAME = 'gemini-2.0-flash-lite'
-def GeminiAI(current_board, wrong, num_retries = 10):
+def GeminiAI(current_board, wrong):
     model = genai.GenerativeModel('gemini-2.0-flash-lite')
 
     game_string = "\n".join(
@@ -47,7 +47,7 @@ def GeminiAI(current_board, wrong, num_retries = 10):
             Choose a valid, unoccupied cell for your next move. Respond ONLY with a single line in this format:
             row,column
             For example: 1,1
-            you have a maximum of {num_retries} to find a correct move."""
+            """
     else:
         if flat_board.count(0) == 1:
             prompt = f"""

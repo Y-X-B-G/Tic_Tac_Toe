@@ -318,12 +318,12 @@ def Gemini_vs_Minimax_CSV(board_size, csv_logger):
     start_time = time.time()
     gemini_time = 0
     mini_time = 0
-    print("HI")
+
 
     while True:
         # Gemini's move
         a1_start = time.time()
-        response = GeminiAI(game.board, was_wrong, 10)
+        response = GeminiAI(game.board, was_wrong)
         print(response)
         move = parse_gemini_response(response, board_size)
         print("response?")
@@ -883,15 +883,16 @@ if __name__ == "__main__":
 
 
     
-    board_sizes = [5,6]
+    board_sizes = [3,4,5,6]
     number_of_test_cycles = 5
     number_of_test_cycles = number_of_test_cycles +1 # to g  range
     for size in range(len(board_sizes)):
         board_size = board_sizes[size]
         for i in range(1,number_of_test_cycles):
-            print(f"\n running test Cycle: {i}")
+            print(f"running test Cycle: {i}")
             print(f"board size: {board_size}\n ")
-
+        
+        
             print("Running Gemini vs Minimax")
             Gemini_vs_Minimax_CSV(board_size, csv_logger)
 
@@ -923,7 +924,6 @@ if __name__ == "__main__":
 
             print("Running Expectminimax vs Expectminimax")
             Expectiminimax_self_play_CSV(board_size,csv_logger)
-
 
             print("\n===============================================================\n")
     csv_logger.close()
