@@ -24,14 +24,10 @@ class TicTacToeGUI:
         self.game_started = False
         self.previous_gemini_move = None
         self.after_id = None
-
+        
         self.create_menu()
         self.create_board()
-<<<<<<< HEAD
-        self.reset_game()
-=======
-        self.reset_game()  # Called manually via Restart button, not on dropdown change
->>>>>>> 22e27da7da8a5c162fc3098d4e03d24ae12809d0
+
 
     def create_menu(self):
         frame = tk.Frame(self.master)
