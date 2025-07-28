@@ -10,7 +10,15 @@ from csvLogger import CSVLogger
 
 
 def Human_vs_Minimax(board_size):
-    """Human (X) goes first vs Minimax AI (O)"""
+    """
+        Plays a game of Tic Tac Toe between a human player (X) and Minimax AI (O).
+        The human player goes first and provides input in the format 'row, column'.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     print("Human (X) vs Minimax AI (O)")
     print("Enter your moves as 'row,column' (0-2,0-2)")
@@ -38,6 +46,15 @@ def Human_vs_Minimax(board_size):
             break
 
 def Gemini_vs_Minimax(board_size):                                                        ##Has CSV version
+    """
+        Plays a game of Tic Tac Toe between Gemini AI (X) and Minimax AI (O).
+        Gemini AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     """Gemini AI (X) goes first vs Minimax AI (O)"""
     game = TicTacToe(board_size)
     print("Gemini AI (X) vs Minimax AI (O)")
@@ -66,7 +83,15 @@ def Gemini_vs_Minimax(board_size):                                              
     print("Gemini (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
 def Minimax_vs_AlphaBeta(board_size):                                           #Has CSV version
-    """Minimax AI (X) goes first vs Alpha-Beta AI (O)"""
+    """
+        Plays a game of Tic Tac Toe between Minimax AI (X) and AlphaBeta AI (O).
+        Minimax AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     print("Minimax AI (X) vs Alpha-Beta AI (O)")
     while True:
@@ -96,7 +121,15 @@ def Minimax_vs_AlphaBeta(board_size):                                           
     print("Minimax (X) wins!" if winner == 1 else "Alpha-Beta (O) wins!" if winner == -1 else "It's a draw!")
 
 def AlphaBeta_vs_Minimax(board_size):                                               #Has CSV 
-    """Alpha-Beta AI (X) goes first vs Minimax AI (O)"""
+    """
+        Plays a game of Tic Tac Toe between Alphabeta AI (X) and Minimax AI (O).
+        AlphaBeta AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     print("Alpha-Beta AI (X) vs Minimax AI (O)")
     while True:
@@ -127,7 +160,15 @@ def AlphaBeta_vs_Minimax(board_size):                                           
     print("Alpha-Beta (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
 def Minimax_vs_Expectiminimax(board_size):                                      #Has CSV version
-    """Minimax AI (X) goes first vs Expectiminimax AI (O)"""
+    """
+        Plays a game of Tic Tac Toe between Minimax AI (X) and Expectiminimax AI (O).
+        Minimax AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     print("Minimax AI (X) vs Expectiminimax AI (O)")
     while True:
@@ -158,7 +199,15 @@ def Minimax_vs_Expectiminimax(board_size):                                      
     print("Minimax (X) wins!" if winner == 1 else "Expectiminimax (O) wins!" if winner == -1 else "It's a draw!")
 
 def Expectiminimax_vs_Minimax(board_size):                         #Has CSV version
-    """Expectiminimax AI (X) goes first vs Minimax AI (O)"""
+    """
+        Plays a game of Tic Tac Toe between Expectiminimax AI (X) and Minimax AI (O).
+        Expectiminimax AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     print("Expectiminimax AI (X) vs Minimax AI (O)")
     while True:
@@ -188,6 +237,15 @@ def Expectiminimax_vs_Minimax(board_size):                         #Has CSV vers
     print("Expectiminimax (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
 def Minimax_self_play(board_size):                                                      #Doens't have CSV
+    """
+        Plays a self-play game of Tic Tac Toe between two Minimax AI players (X and O).
+        Minimax AI (X) goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     """Minimax AI (X) vs Minimax AI (O)"""
     game = TicTacToe(board_size)
     print("Minimax AI (X) vs Minimax AI (O)")
@@ -219,7 +277,15 @@ def Minimax_self_play(board_size):                                              
     print("Minimax (X) wins!" if winner == 1 else "Minimax (O) wins!" if winner == -1 else "It's a draw!")
 
 def AlphaBeta_self_play(board_size): #NO CSV
-    """Alpha-Beta AI (X) vs Alpha-Beta AI (O)"""
+    """
+        Plays a self-play game of Tic Tac Toe between two AlphaBeta AI players (X and O).
+        AlphaBeta AI (X) goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     print("Alpha-Beta AI (X) vs Alpha-Beta AI (O)")
     while True:
@@ -250,7 +316,15 @@ def AlphaBeta_self_play(board_size): #NO CSV
     print("Alpha-Beta (X) wins!" if winner == 1 else "Alpha-Beta (O) wins!" if winner == -1 else "It's a draw!")
 
 def Expectiminimax_self_play(board_size):
-    """Expectiminimax AI (X) vs Expectiminimax AI (O)"""
+    """
+        Plays a self-play game of Tic Tac Toe between two Expectiminimax AI players (X and O).
+        Expectiminimax AI (X) goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     print("Expectiminimax AI (X) vs Expectiminimax AI (O)")
     while True:
@@ -282,7 +356,15 @@ def Expectiminimax_self_play(board_size):
 
 ##Doens't work yet
 def Gemini_self_play(board_size):
-    """Gemini AI (X) vs Gemini AI (O)"""
+    """
+        Plays a self-play game of Tic Tac Toe between two Gemini AI players (X and O).
+        Gemini AI (X) goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     print("Gemini AI (X) vs Gemini AI (O)")
     was_wrong_x = [-1, -1, -1]
