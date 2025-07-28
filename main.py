@@ -393,6 +393,16 @@ def Gemini_self_play(board_size):
 #####################################################################################################################
 
 def Gemini_vs_Minimax_CSV(board_size, csv_logger):
+    """
+        CSV VERSION
+        Plays a game of Tic Tac Toe between Gemini AI (X) and Minimax AI (O).
+        Gemini AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     was_wrong = [-1, -1, -1]
     turn_count = 0
@@ -476,6 +486,16 @@ def Gemini_vs_Minimax_CSV(board_size, csv_logger):
     total_runtime -= 0.2
 
 def Minimax_vs_AlphaBeta_CSV(board_size, csv_logger):
+    """
+        CSV VERSION
+        Plays a game of Tic Tac Toe between Minimax AI (X) and AlphaBeta AI (O).
+        Minimax AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     turn_count = 0
     start_time = time.time()
@@ -535,6 +555,16 @@ def Minimax_vs_AlphaBeta_CSV(board_size, csv_logger):
         runtime_sec=total_runtime
     )
 def Minimax_vs_Expectiminimax_CSV(board_size, csv_logger):
+    """
+        CSV VERSION
+        Plays a game of Tic Tac Toe between Minimax AI (X) and Expectiminimax AI (O).
+        Minimax AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     turn_count = 0
     start_time = time.time()
@@ -592,6 +622,16 @@ def Minimax_vs_Expectiminimax_CSV(board_size, csv_logger):
         runtime_sec=total_runtime
     )
 def Gemini_vs_AlphaBeta_CSV(board_size, csv_logger):
+    """
+        CSV VERSION
+        Plays a game of Tic Tac Toe between Gemini AI (X) and AlphaBeta AI (O).
+        Gemini AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     was_wrong = [-1, -1, -1]
     turn_count = 0
@@ -652,6 +692,16 @@ def Gemini_vs_AlphaBeta_CSV(board_size, csv_logger):
 
 
 def Gemini_vs_Expectiminimax_CSV(board_size, csv_logger):
+    """
+        CSV VERSION
+        Plays a game of Tic Tac Toe between Gemini AI (X) and Expectiminimax AI (O).
+        Gemini AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     was_wrong = [-1, -1, -1]
     turn_count = 0
@@ -712,6 +762,16 @@ def Gemini_vs_Expectiminimax_CSV(board_size, csv_logger):
 
 
 def AlphaBeta_vs_Minimax_CSV(board_size, csv_logger):
+    """
+        CSV VERSION
+        Plays a game of Tic Tac Toe between Alphabeta AI (X) and Minimax AI (O).
+        AlphaBeta AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     turn_count = 0
     start_time = time.time()
@@ -761,6 +821,16 @@ def AlphaBeta_vs_Minimax_CSV(board_size, csv_logger):
     )
 
 def Expectiminimax_vs_Minimax_CSV(board_size, csv_logger):
+    """
+        CSV VERSION
+        Plays a game of Tic Tac Toe between Expectiminimax AI (X) and Minimax AI (O).
+        Expectiminimax AI goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     turn_count = 0
     start_time = time.time()
@@ -810,6 +880,16 @@ def Expectiminimax_vs_Minimax_CSV(board_size, csv_logger):
     )
 
 def Minimax_self_play_CSV(board_size, csv_logger):
+    """
+        CSV VERSION
+        Plays a self-play game of Tic Tac Toe between two Minimax AI players (X and O).
+        Minimax AI (X) goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     turn_count = 0
     start_time = time.time()
@@ -859,6 +939,16 @@ def Minimax_self_play_CSV(board_size, csv_logger):
     )
 
 def Expectiminimax_self_play_CSV(board_size, csv_logger):
+    """
+        CSV VERSION
+        Plays a self-play game of Tic Tac Toe between two Expectiminimax AI players (X and O).
+        Expectiminimax AI (X) goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     turn_count = 0
     start_time = time.time()
@@ -908,6 +998,16 @@ def Expectiminimax_self_play_CSV(board_size, csv_logger):
     )
 
 def AlphaBeta_self_play_CSV(board_size, csv_logger):
+    """
+        CSV VERSION
+        Plays a self-play game of Tic Tac Toe between two AlphaBeta AI players (X and O).
+        AlphaBeta AI (X) goes first and the game runs until a result is determined.
+        
+        @params 
+            board_size: int - The size of the Tic Tac Toe board (n x n).
+        @returns
+            None
+    """
     game = TicTacToe(board_size)
     turn_count = 0
     start_time = time.time()
