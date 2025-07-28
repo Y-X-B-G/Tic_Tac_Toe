@@ -1,4 +1,4 @@
-GameID,BoardSize,PlayerX,PlayerX_Runtime,PlayerO,PlayerO_RuntimeWinner,NumTurns,TotalRunTimeSec
+GameID,BoardSize,PlayerX,PlayerX_Runtime,PlayerO,PlayerO_Runtime,Winner,NumTurns,TotalRunTimeSec
 1,3x3,GeminiAI,80.290684,MinimaxAI, 0.834437,Draw,9,81.125121
 2,3x3,GeminiAI,4.633229,AlphaBetaAI, 0.076411,O,6,4.709640
 3,3x3,GeminiAI,66.982341,ExpectiminimaxAI, 0.075808,Draw,9,67.058149
