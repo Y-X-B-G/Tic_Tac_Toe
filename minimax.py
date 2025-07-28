@@ -9,6 +9,15 @@ class MinimaxAI:#assuming 1 is AI and -1 is Playuer
         self.max_depth = None # Initialize max_depth, will be set in find_best_move
 
     def _calculate_ways_to_win(self, game_state: TicTacToe, player: int) -> int:
+        """
+        Calculates the number of ways a player can win based on the current board state.
+        
+        @params 
+            game_state: TicTacToe - The current game state.
+            player: int - The player (1 or -1) for whom the winning ways are calculated.
+        @returns
+            ways: int - The number of ways the given player can still win.
+        """
         ways = 0
         size = game_state.size
         board = game_state.board
@@ -37,6 +46,14 @@ class MinimaxAI:#assuming 1 is AI and -1 is Playuer
         return ways
 
     def _heuristic_evaluation(self, game_state: TicTacToe) -> float:
+        """
+        Evaluates the current game state using a heuristic function.
+        
+        @params 
+            game_state: TicTacToe - The current game state.
+        @returns
+            float - A score between -1 and 1 that represents how favorable the board is for the AI relative to the opponent.
+        """
         our_ways = self._calculate_ways_to_win(game_state, self.maximizing_player)
         opponent_ways = self._calculate_ways_to_win(game_state, -self.maximizing_player)
 
@@ -46,6 +63,15 @@ class MinimaxAI:#assuming 1 is AI and -1 is Playuer
         return (our_ways - opponent_ways) / (our_ways + opponent_ways)
 
     def minimax(self, game_state: TicTacToe, depth: int) -> float:
+        """
+        Recursively uses the minimax algorithm to evaluate the score of a given game state.
+        
+        @params 
+            game_state: TicTacToe - The current game state.
+            depth: int - The current depth of the recursion tree.
+        @returns
+            float - The score of the game state. 1 for AI win, -1 for opponent win, 0 for a tie, or a heuristic value otherwise.
+        """
         winner = game_state.check_win()
 
         if winner == self.maximizing_player:
@@ -72,6 +98,14 @@ class MinimaxAI:#assuming 1 is AI and -1 is Playuer
             return min_eval
 
     def find_best_move(self, game_state: TicTacToe) -> Optional[tuple[int, int]]:
+        """
+        Finds the best move for the current player using the minimax algorithm.
+        
+        @params 
+            game_state: TicTacToe - The current game state.
+        @returns
+            best_move: Optional[tuple[int, int]] - The (row, column) coordinates of the best move or None if no moves are available.
+        """
         if game_state.size > 3:
             self.max_depth = 3 #chosen depth for larger boards
         else:
