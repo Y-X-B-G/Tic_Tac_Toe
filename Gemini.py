@@ -6,7 +6,7 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 genai.configure(api_key=GOOGLE_API_KEY)
 MODEL_NAME = 'gemini-2.0-flash-lite'
-def GeminiAI(current_board, wrong):
+def GeminiAI(current_board, wrong, num_retries = 10):
     model = genai.GenerativeModel('gemini-2.0-flash-lite')
 
     game_string = "\n".join(
@@ -46,8 +46,7 @@ def GeminiAI(current_board, wrong):
             Otherwise, pick the move that gives you the best chance to win in future turns.
             Choose a valid, unoccupied cell for your next move. Respond ONLY with a single line in this format:
             row,column
-            For example: 1,1
-            """
+            For example: 1,1"""
     else:
         if flat_board.count(0) == 1:
             prompt = f"""
@@ -73,7 +72,7 @@ def GeminiAI(current_board, wrong):
 
 
             Your objective is to maximize your chances of winning. If your opponent can win on their next move, you must block them even if it means you might not win.
-        
+            Use the AlphaBeta AI algortitm to check which moves your opponent can make.
             Your goal is to win as quickly as possible. 
             Check if you have a winning move this turn and play it. If not, block your opponent if they can win on their next move. 
             Otherwise, pick the move that gives you the best chance to win in future turns.

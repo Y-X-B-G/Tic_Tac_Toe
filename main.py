@@ -324,9 +324,9 @@ def Gemini_vs_Minimax_CSV(board_size, csv_logger):
         # Gemini's move
         a1_start = time.time()
         response = GeminiAI(game.board, was_wrong)
-        print(response)
+    
         move = parse_gemini_response(response, board_size)
-        print("response?")
+       
         a1_end = time.time()
         gemini_time += a1_start- a1_end
         
@@ -346,7 +346,7 @@ def Gemini_vs_Minimax_CSV(board_size, csv_logger):
         result = game.play(r, c)
         if result:
             turn_count += 1
-        print(game)
+    
         if game.check_win() is not None:
             break
 
@@ -363,7 +363,7 @@ def Gemini_vs_Minimax_CSV(board_size, csv_logger):
                 turn_count += 1
         else:
             break
-        print(game)
+       
         if game.check_win() is not None:
             break
 
@@ -645,6 +645,7 @@ def AlphaBeta_vs_Minimax_CSV(board_size, csv_logger):
         if move is not None:
             r, c = move
             game.play(r, c)
+            turn_count +=1
         else:
             break
         if game.check_win() is not None: break
@@ -657,6 +658,7 @@ def AlphaBeta_vs_Minimax_CSV(board_size, csv_logger):
         if move is not None:
             r, c = move
             game.play(r, c)
+            turn_count += 1 
         else:
             break
         if game.check_win() is not None: break
@@ -692,6 +694,7 @@ def Expectiminimax_vs_Minimax_CSV(board_size, csv_logger):
         if move is not None:
             r, c = move
             game.play(r, c)
+            turn_count +=1
         else:
             break
         if game.check_win() is not None: break
@@ -704,6 +707,7 @@ def Expectiminimax_vs_Minimax_CSV(board_size, csv_logger):
         if move is not None:
             r, c = move
             game.play(r, c)
+            turn_count += 1
         else:
             break
         if game.check_win() is not None: break
@@ -739,6 +743,7 @@ def Minimax_self_play_CSV(board_size, csv_logger):
         if move is not None:
             r, c = move
             game.play(r, c)
+            turn_count += 1
         else:
             break
         if game.check_win() is not None: break
@@ -751,6 +756,7 @@ def Minimax_self_play_CSV(board_size, csv_logger):
         if move is not None:
             r, c = move
             game.play(r, c)
+            turn_count +=1
         else:
             break
         if game.check_win() is not None: break
@@ -786,6 +792,7 @@ def Expectiminimax_self_play_CSV(board_size, csv_logger):
         if move is not None:
             r, c = move
             game.play(r, c)
+            turn_count+=1 
         else:
             break
         if game.check_win() is not None: break
@@ -798,6 +805,7 @@ def Expectiminimax_self_play_CSV(board_size, csv_logger):
         if move is not None:
             r, c = move
             game.play(r, c)
+            turn_count+=1
         else:
             break
         if game.check_win() is not None: break
@@ -833,6 +841,7 @@ def AlphaBeta_self_play_CSV(board_size, csv_logger):
         if move is not None:
             r, c = move
             game.play(r, c)
+            turn_count +=1
         else:
             break
         if game.check_win() is not None: break
@@ -840,11 +849,12 @@ def AlphaBeta_self_play_CSV(board_size, csv_logger):
         o_start = time.time()
         move = AlphaBetaAI(maximizing_player=-1).find_best_move(game)
         o_end = time.time()
-        o_time += (o_end - o_start)
+        o_time += (o_start-o_end)
 
         if move is not None:
             r, c = move
             game.play(r, c)
+            turn_count += 1
         else:
             break
         if game.check_win() is not None: break
@@ -872,17 +882,16 @@ if __name__ == "__main__":
     #Gemini_vs_Minimax(5)
     #Minimax_vs_AlphaBeta(4)
     #AlphaBeta_vs_Minimax(4)
-    #Expectiminimax_vs_Minimax(4)
+    #Expectiminimax_vs_Minimax(6)
     #Minimax_self_play(3)
-    #AlphaBeta_self_play(3)
-    #Expectiminimax_self_play(4)
+    #AlphaBeta_self_play(6)
+    #Expectiminimax_self_play()
     #Gemini_self_play(3)
 
+    csv_logger = CSVLogger("ai_game_results3.csv")
 
-    csv_logger = CSVLogger("ai_game_results2.csv")
 
-
-    
+        
     board_sizes = [3,4,5,6]
     number_of_test_cycles = 5
     number_of_test_cycles = number_of_test_cycles +1 # to g  range
@@ -907,8 +916,6 @@ if __name__ == "__main__":
             print("Running Minimax VS Expectminimax")
             Minimax_vs_Expectiminimax_CSV(board_size, csv_logger)
 
-            print("Running Gemini VS Minimax")
-            Gemini_vs_Minimax_CSV(board_size,csv_logger)
 
             print("Running AlphaBeta VS Minimax")
             AlphaBeta_vs_Minimax_CSV(board_size,csv_logger)
@@ -916,7 +923,7 @@ if __name__ == "__main__":
             print("Running Expectminimax VS Minimax")
             Expectiminimax_vs_Minimax_CSV(board_size,csv_logger)
 
-            print("Running Minimax VS Minimaz")
+            print("Running Minimax VS Minimax")
             Minimax_self_play_CSV(board_size,csv_logger) 
 
             print("Running AlphaBeta VS AlphaBeta")
@@ -928,5 +935,4 @@ if __name__ == "__main__":
             print("\n===============================================================\n")
     csv_logger.close()
     
-print(f"Testing completed")
-# ... add other AI vs AI here
+    print(f"Testing completed")

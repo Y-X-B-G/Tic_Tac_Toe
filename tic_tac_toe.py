@@ -174,9 +174,18 @@ class TicTacToe:
                         next_moves.append(new_board)
 
         return next_moves
+    
+    def get_filled_positions(self):
+        filled_positions= []
+        for row in range(self.size):
+            for cols in range(self.size):
+                if self.board[row][cols] != 0:
+                    filled_positions.append([row,cols])
+        return filled_positions
 
-    def stochastic_delete(self) -> Optional[tuple[int, int, int]]:
+    def stochastic_delete(self,filled_positions) -> Optional[tuple[int, int, int]]:
         """
+        #### OUTDATED DISCRIPTION #####
         This is the stochastic step of the tic tac toe board.
         We generate a value between 0 and self.size**2 -1 
         which corresponds the position on the board if it was linear
@@ -188,29 +197,15 @@ class TicTacToe:
             None
         """
         #Buiding a list of all filled positions
-        filled_positions= []
-        for row in range(self.size):
-            for cols in range(self.size):
-                if self.board[row][cols] != 0:
-                    filled_positions.append([row,cols])
-        # if there is noting in the board, do nothing
-        if len( filled_positions) == 0:
-            return None
-        # If there is something, then randomly delete something, and return the row, column and original value
-        else:
-            position: List[int] = random.choice(filled_positions)
-            row: int = position[0]
-            column: int = position[1]
-            original_val = self.board[row][column]
-            self.board[row][column] = 0
-            return row, column, original_val
-        
-        #Don't need this anymore
-        """
-        position: int = random.randint(0,self.size**2-1)
-        row: int = position//self.size
-        column: int = position - self.size*row
-      """
+    
+        chosen_pos: List[int] = random.choice(filled_positions)
+        row: int = chosen_pos[0]
+        column: int = chosen_pos[1]
+        original_val = self.board[row][column]
+        self.board[row][column] = 0
+        return row, column, original_val
+
+
 
     def __str__(self) -> str:
         output: str = ""

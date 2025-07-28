@@ -1,30 +1,37 @@
 from tic_tac_toe import TicTacToe
 from typing import Optional, List, Self
 import copy
-
+import random
 class ExpectiminimaxAI:
     def __init__(self, maximizing_player: int, max_depth: int = 4):
         self.maximizing_player = maximizing_player # X: 1, O: -1
         self.max_depth = max_depth
 
     def chance_node(self, game_state: TicTacToe, depth: int, alpha, beta): 
-        filled_positions = []
+ 
+        filled_positions = game_state.get_filled_positions()
+        if not filled_positions:
+            return self.expectiminimax(game_state,depth+1,alpha,beta,is_chance_turn = True)
+        
+        expected_val = 0
+        boardSize = game_state.size
+        num_samples = len(filled_positions) if boardSize <= 4 else min(5, len(filled_positions))
 
-        for r in range(game_state.size):
-            for c in range(game_state.size):
-                if game_state.board[r][c] != 0:
-                    filled_positions.append((r, c))#find all the occupied spaces (non zero) and add them to the board
-        if not filled_positions:#if empty board , run expectiminimax normally
-            return self.expectiminimax(game_state, depth, alpha, beta, is_chance_turn=True,)
-        expected_value = 0
-        num_outcomes = len(filled_positions)
-
-        for r, c in filled_positions:
+        for _ in range(num_samples):
             temp_game = copy.deepcopy(game_state)
-            temp_game.board[r][c] = 0#create a copy of the game with one of the filled positions set to 0
-            expected_value += self.expectiminimax(temp_game, depth + 1, alpha, beta, is_chance_turn=True)#run expectiminimax
+            result = temp_game.stochastic_delete(filled_positions)
 
-        return expected_value / num_outcomes
+            if result is None:
+                continue  
+
+            eval_val = self.expectiminimax(temp_game, depth + 1, alpha, beta, is_chance_turn=True)
+
+            if eval_val is not None:
+                expected_val += eval_val
+
+        return expected_val / num_samples if num_samples else 0
+            
+
 
     def expectiminimax(self, game_state: TicTacToe, depth: int, alpha, beta, is_chance_turn: bool = False):
         winner = game_state.check_win()

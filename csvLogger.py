@@ -9,7 +9,7 @@ class CSVLogger:
             'GameID',
             'BoardSize',
             'PlayerX',
-            'PlayerX_Runtime'
+            'PlayerX_Runtime',
             'PlayerO',
             'PlayerO_Runtime'
             'Winner',
@@ -23,9 +23,9 @@ class CSVLogger:
             self.game_id,
             f"{board_size}x{board_size}",
             player_x,
-            f"{playerx_runtime:.6f}",
+            f"{abs(playerx_runtime):.6f}",
             player_o,
-            f"{playero_runtime: .6f}",
+            f"{abs(playero_runtime): .6f}",
             winner,
             num_turns,
             f"{runtime_sec:.6f}"
