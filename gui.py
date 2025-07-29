@@ -8,6 +8,14 @@ from expectiminimax import ExpectiminimaxAI
 
 class TicTacToeGUI:
     def __init__(self, master):
+        """
+        Initializes the TicTacToe GUI application.
+        
+        @params 
+            master: tk.Tk
+        @returns
+            None
+        """
         self.master = master
         self.master.title("CP468 Tic Tac Toe")
         self.master.resizable(True, True)
@@ -30,6 +38,14 @@ class TicTacToeGUI:
 
 
     def create_menu(self):
+        """
+        Generates the top menu UI with mode and board size selection, and a restart button.
+        
+        @params 
+            None
+        @returns
+            None
+        """
         frame = tk.Frame(self.master)
         frame.pack(pady=10)
 
@@ -55,6 +71,14 @@ class TicTacToeGUI:
         tk.Button(frame, text="Restart", command=self.reset_game, font=("Courier", 12)).pack(side=tk.LEFT, padx=10)
 
     def create_board(self):
+        """
+        Generates or refreshes the game board grid with buttons.
+        
+        @params 
+            None
+        @returns
+            None
+        """
         if self.board_frame:
             self.board_frame.destroy()
 
@@ -78,17 +102,41 @@ class TicTacToeGUI:
             self.buttons.append(row)
 
     def notify_mode_change(self):
+        """
+        Displays a dialog to notify the user that the mode was changed and 'Restart' must be clicked to apply.
+        
+        @params 
+            None
+        @returns
+            None
+        """
         new_mode = self.mode.get()
         if new_mode != getattr(self, 'current_mode', None):
             messagebox.showinfo("Game Mode Changed", "Game mode changed. Please press Restart to apply the new mode.")
 
     def notify_restart_required(self):
+        """
+        Displays a dialog to notify the user that 'Restart' must be clicked to continue.
+        
+        @params 
+            None
+        @returns
+            None
+        """
         size_str = self.size_var.get()
         selected_size = int(size_str.split("x")[0])
         if selected_size != self.board_size:
             messagebox.showinfo("Board Size Changed", "Board size changed. Please press Restart to apply the new board.")
 
     def reset_game(self):
+        """
+        Resets game state, reinitializes board, and sets AI players based on the selected mode.
+        
+        @params 
+            None
+        @returns
+            None
+        """
         size_str = self.size_var.get()
         self.board_size = int(size_str.split("x")[0])
         self.create_board()
@@ -129,6 +177,15 @@ class TicTacToeGUI:
                 self.after_id = self.master.after(1000, self.run_ai_vs_ai)
 
     def handle_click(self, r, c):
+        """
+        Handles player clicks on board, updating game state, and triggering AI move.
+        
+        @params 
+            r: int - Row index of the clicked cell.
+            c: int - Column index of the clicked cell.
+        @returns
+            None
+        """
         if not self.game_started or self.game is None:
             return
         if self.game.get_board()[r][c] != 0 or self.game.check_win() is not None:
@@ -149,6 +206,14 @@ class TicTacToeGUI:
             self.master.after(500, self.ai_move)
 
     def ai_move(self):
+        """
+        Executes a move for the current AI player and updates the game board accordingly.
+        
+        @params 
+            None
+        @returns
+            None
+        """
         if not self.game_started or self.game is None:
             return
         player = self.game.get_current_player()
@@ -175,6 +240,14 @@ class TicTacToeGUI:
                 self.check_game_over()
 
     def run_ai_vs_ai(self):
+        """
+        Handles automatic gameplay between two AI players, repeating moves until the game is over.
+        
+        @params 
+            None
+        @returns
+            None
+        """
         if not self.game_started or self.game is None or self.game.check_win() is not None:
             self.game_started = False
             self.check_game_over()
@@ -233,6 +306,16 @@ class TicTacToeGUI:
         self.after_id = self.master.after(1000, self.run_ai_vs_ai)
 
     def update_button(self, r, c, player):
+        """
+        Updates button display at the selected cell with the player's corresponding symbol.
+        
+        @params 
+            r: int - Row index of the clicked cell.
+            c: int - Column index of the clicked cell.
+            player: int - 1 for X or -1 for O.
+        @returns
+            None
+        """
         symbol = "X" if player == 1 else "O"
         color = "green" if player == 1 else "red"
 
@@ -247,6 +330,14 @@ class TicTacToeGUI:
         )
 
     def check_game_over(self):
+        """
+        Checks if the game is over (win or tie), displays a message, and disables the board.
+        
+        @params 
+            None
+        @returns
+            bool - True if game is over, False otherwise.
+        """
         if self.game is None:
             return False
         winner = self.game.check_win()
@@ -265,16 +356,40 @@ class TicTacToeGUI:
         return False
 
     def show_start_button(self):
+        """
+        Displays a start button.
+        
+        @params 
+            None
+        @returns
+            None
+        """
         if not hasattr(self, 'start_button') or not self.start_button:
             self.start_button = tk.Button(self.master, text="Start Match", font=("Courier", 12),
                                           command=self.start_gemini_match)
         self.start_button.pack(pady=10)
 
     def hide_start_button(self):
+        """
+        Hides the start button.
+        
+        @params 
+            None
+        @returns
+            None
+        """
         if hasattr(self, 'start_button'):
             self.start_button.pack_forget()
 
     def start_gemini_match(self):
+        """
+        Initiates a Gemini AI vs AI match.
+        
+        @params 
+            None
+        @returns
+            None
+        """
         self.game_started = True
         self.after_id = self.master.after(1000, self.run_ai_vs_ai)
 
