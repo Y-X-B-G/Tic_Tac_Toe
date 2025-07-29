@@ -4,10 +4,27 @@ import copy
 
 class AlphaBetaAI:
     def __init__(self, maximizing_player: int):
+        """
+        Initializes the Alpha-Beta Pruning AI.
+
+        @params
+            maximizing_player: int - The player this AI will optimize for (1 for X, -1 for O).
+        @returns
+            None
+        """
         self.maximizing_player = maximizing_player
         self.max_depth = None
 
     def _calculate_ways_to_win(self, game_state: TicTacToe, player: int) -> int:
+        """
+        Calculates the number of ways a player can win based on the current board state.
+        
+        @params 
+            game_state: TicTacToe - The current game state.
+            player: int - The player (1 or -1) for whom the winning ways are calculated.
+        @returns
+            ways: int - The number of ways the given player can still win.
+        """
         ways = 0
         size = game_state.size
         board = game_state.board
@@ -33,6 +50,14 @@ class AlphaBetaAI:
         return ways
 
     def _heuristic_evaluation(self, game_state: TicTacToe) -> float:
+        """
+        Evaluates the current game state using a heuristic function.
+        
+        @params 
+            game_state: TicTacToe - The current game state.
+        @returns
+            float - A score between -1 and 1 that represents how favorable the board is for the AI relative to the opponent.
+        """
         our_ways = self._calculate_ways_to_win(game_state, self.maximizing_player)
         opponent_ways = self._calculate_ways_to_win(game_state, -self.maximizing_player)
 
@@ -42,6 +67,17 @@ class AlphaBetaAI:
         return (our_ways - opponent_ways) / (our_ways + opponent_ways)
 
     def minimax(self, game_state: TicTacToe, depth: int, alpha: float, beta: float) -> float:
+        """
+        Recursively applies the minimax algorithm with alpha-beta pruning to evaluate the best possible score for the AI.
+
+        @params
+            game_state: TicTacToe - Current state of the Tic Tac Toe game.
+            depth: int - Current depth in the search tree.
+            alpha: float - Best score the maximizing player can guarantee so far.
+            beta: float - Best score the minimizing player can guarantee so far.
+        @returns
+            float - Evaluation score for the current game state.
+        """
         winner = game_state.check_win()
 
         if winner == self.maximizing_player:
@@ -75,6 +111,14 @@ class AlphaBetaAI:
             return min_eval
 
     def find_best_move(self, game_state: TicTacToe) -> Optional[tuple[int, int]]:
+        """
+        Finds the best move for the current player using the minimax algorithm.
+        
+        @params 
+            game_state: TicTacToe - The current game state.
+        @returns
+            best_move: Optional[tuple[int, int]] - The (row, column) coordinates of the best move or None if no moves are available.
+        """
         if game_state.size > 3:
             self.max_depth = 3
         else:
