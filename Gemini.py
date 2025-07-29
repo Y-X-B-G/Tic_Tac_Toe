@@ -7,6 +7,17 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 MODEL_NAME = 'gemini-2.0-flash-lite'
 def GeminiAI(current_board, wrong, num_retries = 10):
+    """
+        Generates the next move for the Gemini AI based on the board state.
+        
+        @params
+        current_board: List[List[int]] - The current state of the Tic Tac Toe board (1 = X, -1 = O, 0 = empty).
+        wrong: tuple - Information about a previous invalid move or error (used for feedback/correction).
+        num_retries: int (default = 10) - Maximum number of attempts to generate a valid move.
+
+        @returns
+        str - The chosen move in the format "row,column".
+    """
     model = genai.GenerativeModel('gemini-2.0-flash-lite')
 
     game_string = "\n".join(
