@@ -4,11 +4,30 @@ import copy
 import random
 class ExpectiminimaxAI:
     def __init__(self, maximizing_player: int, max_depth: int = 4):
+        """
+        Initializes the Expectiminimax AI application.
+        
+        @params 
+            maximizing_player: int - The player the AI is optimizing for (1 for X, -1 for O).
+            max_depth: int - Maximum depth of the search tree.
+        @returns
+            None
+        """
         self.maximizing_player = maximizing_player # X: 1, O: -1
         self.max_depth = max_depth
 
     def chance_node(self, game_state: TicTacToe, depth: int, alpha, beta): 
- 
+        """
+        Evaluates a chance node by randomly removing filled positions and averaging the outcome of possible future states.
+        
+        @params 
+            game_state: TicTacToe - Current state of the game.
+            depth: int - Current depth in the search tree.
+            alpha: float - Alpha value for pruning.
+            beta: float - Beta value for pruning.
+        @returns
+            float - The expected value from the chance.
+        """
         filled_positions = game_state.get_filled_positions()
         if not filled_positions:
             return self.expectiminimax(game_state,depth+1,alpha,beta,is_chance_turn = True)
@@ -34,6 +53,18 @@ class ExpectiminimaxAI:
 
 
     def expectiminimax(self, game_state: TicTacToe, depth: int, alpha, beta, is_chance_turn: bool = False):
+        """
+        Recursively evaluates game states using the expectiminimax algorithm, incorporating both deterministic and chance nodes.
+        
+        @params 
+            game_state: TicTacToe - Current state of the game.
+            depth: int - Current depth in the search tree.
+            alpha: float - Alpha value for pruning.
+            beta: float - Beta value for pruning.
+            is_chance_turn: bool - True if the current node is a chance.
+        @returns
+            float - Evaluation score of the current game state.
+        """
         winner = game_state.check_win()
         if winner is not None:
             if winner == self.maximizing_player:
@@ -68,6 +99,14 @@ class ExpectiminimaxAI:
             return min_eval
 
     def find_best_move(self, game_state: TicTacToe):
+        """
+        Recursively evaluates game states using the expectiminimax algorithm, incorporating both deterministic and chance nodes.
+        
+        @params 
+            game_state: TicTacToe - Current state of the game.
+        @returns
+            Optional[tuple[int, int]] - Row and column of the best move or None if no move is available.
+        """
         best_score = -float('inf') if game_state.get_current_player() == self.maximizing_player else float('inf')
         best_move = None
         
